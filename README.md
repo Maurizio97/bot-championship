@@ -84,21 +84,46 @@ Nota: nel progetto `discord_id` viene usato come chiave testuale (username Disco
 
 ## Comandi implementati
 
-- `&addteam <nomeSquadra> <discordOwnerUsername>`
+- `&addteam <nomeSquadra> <@owner>`
+- `&admins`
+- `&addadmin <@utente> <role>`
+- `&removeadmin <@utente>`
 - `&assignplayer <nomeGiocatore|playerId> <teamId>`
-- `&updateteam <teamId> <nuovoNomeSquadra> <ownerUsername>`
-- `&rose`
+- `&updateteam <teamId> <nuovoNomeSquadra> <@owner>`
+- `&continueteams`, `&closeteams`
+- `&iniziodraft`, `&continua`, `&chiudidraft`
+- `&turno`, `&ordine`
+- `&aggiungi <teamName> <amount> <reason>`, `&togli <teamName> <amount> <reason>`
+- `&aprimercato`, `&chiudimercato`
+- `&rosa [nomeSquadra]`, `&budget [nomeSquadra]`, `&valore <nomeGiocatore|playerId>`, `&chi <nomeGiocatore|playerId>`
 - `&comandi`
 
 I comandi admin (`&addteam`, `&assignplayer`, `&updateteam`) richiedono che l'autore del messaggio sia presente nella tabella `admins`.
+
+Nota: per selezionare un utente nei comandi admin/team owner, la mention Discord (`@utente`) e obbligatoria.
 
 `&assignplayer` cerca il giocatore per nome; se trova piu risultati, suggerisce i primi 10 match con relativo ID.
 
 ## Schema database
 
 - SQL completo: `database/schema.sql`
+- Migrazione incrementale: `database/migrations/001_admin_teamselection_draft.sql`
 - Query esempio e seed: `database/example-queries.sql`
 - Seed 10 giocatori: `database/seed-players.sql`
+
+## Nuove tabelle e persistenza stato
+
+- `league_state`: singleton globale con stato draft/mercato/team selection, turno e round correnti
+- `draft_orders`: ordine persistente per `TEAM_SELECTION` e `PLAYER_DRAFT`
+- `budget_logs`: storico completo accrediti/addebiti/pick
+- `teams.selected_club_name`: club FC scelto durante team selection
+
+## Draft e restart bot
+
+- Ordine, round, turno e status sono persistiti in DB: restart non azzera i progressi.
+- `&continua` e `&continueteams` mantengono ordine e turno.
+- `&iniziodraft` rigenera un ordine random nuovo e resetta turno/round.
+- Pseudocodice e transaction examples: `docs/draft-flow.md`
 
 ## Relazioni principali
 

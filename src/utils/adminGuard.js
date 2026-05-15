@@ -1,7 +1,7 @@
-const adminService = require('../services/adminService');
+const adminMiddleware = require('../middlewares/adminMiddleware');
 
 async function ensureAdminByMessage(message) {
-  return adminService.ensureAdmin(message.author.username);
+  return adminMiddleware(message);
 }
 
 module.exports = {

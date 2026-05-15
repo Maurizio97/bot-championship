@@ -7,7 +7,6 @@ module.exports = {
   async execute(message, args, context = {}) {
     const commands = context.commands;
     const list = [];
-    console.log(commands);
     if (commands && commands.size > 0) {
       for (const [, command] of commands) {
         list.push(`- \`${command.usage || `&${command.name}`}\` - ${command.description || 'Nessuna descrizione'}`);

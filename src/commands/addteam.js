@@ -2,13 +2,13 @@ const { DEFAULT_TEAM_BUDGET } = require('../config/constants');
 const teamService = require('../services/teamService');
 const { ensureAdminByMessage } = require('../utils/adminGuard');
 const { successEmbed } = require('../utils/embedFactory');
-const { assertDiscordId } = require('../utils/validators');
+const { assertDiscordTag } = require('../utils/validators');
 
 module.exports = {
   name: 'addteam',
   aliases: ['aggiungiteam'],
   description: 'Crea una nuova squadra',
-  usage: '&addteam <nomeSquadra> <discordOwnerUsername>',
+  usage: '&addteam <nomeSquadra> <@owner>',
   async execute(message, args) {
     await ensureAdminByMessage(message);
 
@@ -18,7 +18,7 @@ module.exports = {
 
     const rawOwnerDiscordId = args[args.length - 1];
     const name = args.slice(0, -1).join(' ');
-    const ownerDiscordId = assertDiscordId(rawOwnerDiscordId, 'discordOwnerUsername');
+    const ownerDiscordId = assertDiscordTag(rawOwnerDiscordId, 'discordOwnerTag');
 
     const team = await teamService.createTeam({
       name,

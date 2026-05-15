@@ -4,6 +4,9 @@ const Player = require('./Player');
 const Admin = require('./Admin');
 const Transfer = require('./Transfer');
 const OverallHistory = require('./OverallHistory');
+const LeagueState = require('./LeagueState');
+const DraftOrder = require('./DraftOrder');
+const BudgetLog = require('./BudgetLog');
 
 Team.hasMany(Player, { foreignKey: 'team_id', as: 'players' });
 Player.belongsTo(Team, { foreignKey: 'team_id', as: 'team' });
@@ -19,6 +22,15 @@ Transfer.belongsTo(Team, { foreignKey: 'to_team_id', as: 'toTeam' });
 Admin.hasMany(Transfer, { foreignKey: 'created_by_admin_id', as: 'transfersCreated' });
 Transfer.belongsTo(Admin, { foreignKey: 'created_by_admin_id', as: 'createdByAdmin' });
 
+Team.hasMany(DraftOrder, { foreignKey: 'team_id', as: 'draftOrders' });
+DraftOrder.belongsTo(Team, { foreignKey: 'team_id', as: 'team' });
+
+Team.hasMany(BudgetLog, { foreignKey: 'team_id', as: 'budgetLogs' });
+BudgetLog.belongsTo(Team, { foreignKey: 'team_id', as: 'team' });
+
+Admin.hasMany(BudgetLog, { foreignKey: 'created_by_admin_id', as: 'budgetLogsCreated' });
+BudgetLog.belongsTo(Admin, { foreignKey: 'created_by_admin_id', as: 'createdByAdmin' });
+
 Player.hasMany(OverallHistory, { foreignKey: 'player_id', as: 'overallHistory' });
 OverallHistory.belongsTo(Player, { foreignKey: 'player_id', as: 'player' });
 
@@ -31,6 +43,9 @@ module.exports = {
   Player,
   Admin,
   Transfer,
-  OverallHistory
+  OverallHistory,
+  LeagueState,
+  DraftOrder,
+  BudgetLog
 };
 

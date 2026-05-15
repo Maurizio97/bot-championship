@@ -1,32 +1,16 @@
 const { DataTypes, Model } = require('sequelize');
 const sequelize = require('../database/sequelize');
 
-class Transfer extends Model {}
+class BudgetLog extends Model {}
 
-Transfer.init(
+BudgetLog.init(
   {
     id: {
       type: DataTypes.INTEGER,
-      autoIncrement: true,
-      primaryKey: true
+      primaryKey: true,
+      autoIncrement: true
     },
-    player_id: {
-      type: DataTypes.INTEGER,
-      allowNull: false,
-      references: {
-        model: 'players',
-        key: 'id'
-      }
-    },
-    from_team_id: {
-      type: DataTypes.INTEGER,
-      allowNull: true,
-      references: {
-        model: 'teams',
-        key: 'id'
-      }
-    },
-    to_team_id: {
+    team_id: {
       type: DataTypes.INTEGER,
       allowNull: false,
       references: {
@@ -34,11 +18,19 @@ Transfer.init(
         key: 'id'
       }
     },
-    price: {
+    amount: {
       type: DataTypes.BIGINT,
+      allowNull: false
+    },
+    type: {
+      type: DataTypes.ENUM('ADD', 'REMOVE', 'DRAFT_PURCHASE', 'MARKET_PURCHASE'),
+      allowNull: false
+    },
+    reason: {
+      type: DataTypes.STRING(255),
       allowNull: false,
       validate: {
-        min: 0
+        notEmpty: true
       }
     },
     created_by_admin_id: {
@@ -52,12 +44,12 @@ Transfer.init(
   },
   {
     sequelize,
-    modelName: 'transfers',
-    tableName: 'transfers',
+    modelName: 'budget_logs',
+    tableName: 'budget_logs',
     updatedAt: false,
     timestamps: true
   }
 );
 
-module.exports = Transfer;
+module.exports = BudgetLog;
 

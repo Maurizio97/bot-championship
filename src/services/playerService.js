@@ -85,8 +85,20 @@ async function assignPlayerToTeam({ playerIdentifier, toTeamId, adminId }) {
   });
 }
 
+async function getPlayerValueInfo(playerIdentifier) {
+  const player = await findPlayerByIdentifierOrSuggest(playerIdentifier);
+  const team = player.team || (player.team_id ? await teamService.getTeamById(player.team_id) : null);
+
+  return {
+    player,
+    isAvailable: !player.team_id,
+    ownerTeam: team
+  };
+}
+
 module.exports = {
   assignPlayerToTeam,
-  findPlayerByIdentifierOrSuggest
+  findPlayerByIdentifierOrSuggest,
+  getPlayerValueInfo
 };
 

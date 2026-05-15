@@ -1,3 +1,4 @@
+const { Op, fn, col, where } = require('sequelize');
 const { Team } = require('../models');
 const { Player } = require('../models');
 
@@ -7,6 +8,55 @@ async function findByName(name) {
 
 async function findById(id) {
   return Team.findByPk(id);
+}
+
+async function findByIdForUpdate(id, transaction) {
+  return Team.findByPk(id, {
+    transaction,
+    lock: transaction.LOCK.UPDATE
+  });
+}
+
+async function findByOwnerDiscordId(ownerDiscordId) {
+  return Team.findOne({ where: { owner_discord_id: ownerDiscordId } });
+}
+
+async function findByOwnerDiscordCandidates(candidates) {
+  const normalizedCandidates = (Array.isArray(candidates) ? candidates : [])
+    .map((item) => String(item || '').trim())
+    .filter(Boolean);
+
+  if (normalizedCandidates.length === 0) {
+    return null;
+  }
+
+  return Team.findOne({
+    where: {
+      owner_discord_id: {
+        [Op.in]: normalizedCandidates
+      }
+    }
+  });
+}
+
+async function findBySelectedClubName(clubName) {
+  return Team.findOne({ where: { selected_club_name: clubName } });
+}
+
+async function findAllOrdered() {
+  return Team.findAll({
+    order: [['name', 'ASC']]
+  });
+}
+
+async function findByNameInsensitive(name, options = {}) {
+  const normalized = String(name || '').trim().toLowerCase();
+  return Team.findOne({
+    where: where(fn('LOWER', col('name')), {
+      [Op.eq]: normalized
+    }),
+    ...options
+  });
 }
 
 async function createTeam(data) {
@@ -36,6 +86,12 @@ async function findAllWithPlayers() {
 module.exports = {
   findByName,
   findById,
+  findByIdForUpdate,
+  findByOwnerDiscordId,
+  findByOwnerDiscordCandidates,
+  findBySelectedClubName,
+  findAllOrdered,
+  findByNameInsensitive,
   createTeam,
   save,
   findAllWithPlayers

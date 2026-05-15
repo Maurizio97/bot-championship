@@ -51,10 +51,37 @@ async function listTeamRosters() {
   return teamRepository.findAllWithPlayers();
 }
 
+async function getTeamByOwnerCandidates(candidates) {
+  const team = await teamRepository.findByOwnerDiscordCandidates(candidates);
+  if (!team) {
+    throw new NotFoundError('Nessuna squadra associata al tuo account.');
+  }
+
+  return team;
+}
+
+async function getRosterByTeamName(teamName) {
+  const normalized = String(teamName || '').trim();
+  if (!normalized) {
+    throw new BadRequestError('Nome squadra obbligatorio.');
+  }
+
+  const all = await teamRepository.findAllWithPlayers();
+  const team = all.find((item) => item.name.toLowerCase() === normalized.toLowerCase());
+
+  if (!team) {
+    throw new NotFoundError(`Squadra ${teamName} non trovata.`);
+  }
+
+  return team;
+}
+
 module.exports = {
   createTeam,
   getTeamById,
   updateTeamDetails,
-  listTeamRosters
+  listTeamRosters,
+  getTeamByOwnerCandidates,
+  getRosterByTeamName
 };
 

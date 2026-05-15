@@ -1,12 +1,12 @@
 const teamService = require('../services/teamService');
 const { ensureAdminByMessage } = require('../utils/adminGuard');
 const { successEmbed } = require('../utils/embedFactory');
-const { assertDiscordId, assertPositiveInteger } = require('../utils/validators');
+const { assertDiscordTag, assertPositiveInteger } = require('../utils/validators');
 
 module.exports = {
   name: 'updateteam',
   description: 'Modifica nome squadra e utente assegnato',
-  usage: '&updateteam <teamId> <nuovoNomeSquadra> <ownerUsername>',
+  usage: '&updateteam <teamId> <nuovoNomeSquadra> <@owner>',
   async execute(message, args) {
     await ensureAdminByMessage(message);
 
@@ -16,7 +16,7 @@ module.exports = {
 
     const teamId = assertPositiveInteger(args[0], 'teamId');
     const rawOwnerDiscordId = args[args.length - 1];
-    const ownerDiscordId = assertDiscordId(rawOwnerDiscordId, 'ownerUsername');
+    const ownerDiscordId = assertDiscordTag(rawOwnerDiscordId, 'ownerTag');
     const newName = args.slice(1, -1).join(' ').trim();
 
     if (!newName) {
