@@ -20,6 +20,7 @@
   "dependencies": {
     "discord.js": "^14.16.3",
     "dotenv": "^16.4.5",
+    "express": "^5.2.1",
     "mysql2": "^3.11.3",
     "pg": "^8.13.0",
     "pg-hstore": "^2.3.4",
@@ -29,4 +30,3 @@
     "nodemon": "^3.1.7"
   }
 }
-

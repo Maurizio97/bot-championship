@@ -7,6 +7,7 @@ const { startHealthServer } = require('./server/healthServer');
 
 startHealthServer();
 
+process.on('unhandledRejection', console.error);
 async function bootstrap() {
   await initDatabase();
 
@@ -16,6 +17,7 @@ async function bootstrap() {
 
   client.once(readyEvent.name, (...args) => readyEvent.execute(...args));
   client.on(messageCreateEvent.name, (...args) => messageCreateEvent.execute(...args));
+  client.on('error', console.error);
 
   await client.login(env.discordToken);
 }
