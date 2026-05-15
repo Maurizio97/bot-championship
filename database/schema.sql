@@ -1,0 +1,54 @@
+-- Schema relazionale per PostgreSQL (compatibile anche con MySQL con piccole variazioni sintattiche)
+
+CREATE TABLE IF NOT EXISTS teams (
+  id SERIAL PRIMARY KEY,
+  name VARCHAR(100) NOT NULL UNIQUE,
+  owner_discord_id VARCHAR(30) NOT NULL,
+  budget BIGINT NOT NULL DEFAULT 100000000,
+  created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE IF NOT EXISTS players (
+  id SERIAL PRIMARY KEY,
+  player_name VARCHAR(120) NOT NULL,
+  overall SMALLINT NOT NULL CHECK (overall BETWEEN 1 AND 99),
+  potential_overall SMALLINT NOT NULL CHECK (potential_overall BETWEEN 1 AND 99),
+  role VARCHAR(40) NOT NULL,
+  price BIGINT NOT NULL CHECK (price >= 0),
+  team_id INTEGER NULL REFERENCES teams(id) ON DELETE SET NULL,
+  created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE IF NOT EXISTS admins (
+  id SERIAL PRIMARY KEY,
+  discord_id VARCHAR(30) NOT NULL UNIQUE,
+  role VARCHAR(50) NOT NULL DEFAULT 'admin',
+  created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE IF NOT EXISTS transfers (
+  id SERIAL PRIMARY KEY,
+  player_id INTEGER NOT NULL REFERENCES players(id) ON DELETE CASCADE,
+  from_team_id INTEGER NULL REFERENCES teams(id) ON DELETE SET NULL,
+  to_team_id INTEGER NOT NULL REFERENCES teams(id) ON DELETE RESTRICT,
+  price BIGINT NOT NULL CHECK (price >= 0),
+  created_by_admin_id INTEGER NOT NULL REFERENCES admins(id) ON DELETE RESTRICT,
+  created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE IF NOT EXISTS overall_history (
+  id SERIAL PRIMARY KEY,
+  player_id INTEGER NOT NULL REFERENCES players(id) ON DELETE CASCADE,
+  old_overall SMALLINT NOT NULL CHECK (old_overall BETWEEN 1 AND 99),
+  new_overall SMALLINT NOT NULL CHECK (new_overall BETWEEN 1 AND 99),
+  reason VARCHAR(255) NOT NULL,
+  updated_by_admin_id INTEGER NOT NULL REFERENCES admins(id) ON DELETE RESTRICT,
+  created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE INDEX IF NOT EXISTS idx_players_team_id ON players(team_id);
+CREATE INDEX IF NOT EXISTS idx_transfers_player_id ON transfers(player_id);
+CREATE INDEX IF NOT EXISTS idx_overall_history_player_id ON overall_history(player_id);
+
