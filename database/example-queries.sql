@@ -1,15 +1,15 @@
 -- Admin seed
 INSERT INTO admins (discord_id, role)
-VALUES ('123456789012345678', 'superadmin')
+VALUES ('encke_', 'superadmin')
 ON CONFLICT (discord_id) DO NOTHING;
 
--- Team seed
+-- Team seed (budget espresso in unita)
 INSERT INTO teams (name, owner_discord_id, budget)
-VALUES ('Milan', '123456789012345678', 100000000);
+VALUES ('Milan', 'encke_', 700);
 
--- Player seed
+-- Player seed (price espresso in unita)
 INSERT INTO players (player_name, overall, potential_overall, role, price)
-VALUES ('Rafael Leao', 86, 89, 'LW', 85000000);
+VALUES ('Rafael Leao', 86, 89, 'LW', 85);
 
 -- Trasferimento manuale: assegna player id 1 al team id 1
 UPDATE players
@@ -17,7 +17,7 @@ SET team_id = 1, updated_at = CURRENT_TIMESTAMP
 WHERE id = 1;
 
 INSERT INTO transfers (player_id, from_team_id, to_team_id, price, created_by_admin_id)
-VALUES (1, NULL, 1, 85000000, 1);
+VALUES (1, NULL, 1, 85, 1);
 
 -- Evoluzione overall
 UPDATE players

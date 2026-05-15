@@ -1,5 +1,6 @@
 const { DataTypes, Model } = require('sequelize');
 const sequelize = require('../database/sequelize');
+const { DEFAULT_TEAM_BUDGET } = require('../config/constants');
 
 class Team extends Model {}
 
@@ -20,7 +21,7 @@ Team.init(
       }
     },
     owner_discord_id: {
-      type: DataTypes.STRING(30),
+      type: DataTypes.STRING(64),
       allowNull: false,
       validate: {
         notEmpty: true
@@ -29,7 +30,7 @@ Team.init(
     budget: {
       type: DataTypes.BIGINT,
       allowNull: false,
-      defaultValue: 100000000,
+      defaultValue: DEFAULT_TEAM_BUDGET,
       validate: {
         min: 0
       }

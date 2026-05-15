@@ -29,8 +29,32 @@ async function getTeamById(id) {
   return team;
 }
 
+async function updateTeamDetails({ teamId, newName, ownerDiscordId }) {
+  if (!newName || !ownerDiscordId) {
+    throw new BadRequestError('Nuovo nome squadra e owner Discord username sono obbligatori.');
+  }
+
+  const team = await getTeamById(teamId);
+  const existingByName = await teamRepository.findByName(newName);
+
+  if (existingByName && existingByName.id !== team.id) {
+    throw new ConflictError(`La squadra ${newName} esiste gia.`);
+  }
+
+  team.name = newName;
+  team.owner_discord_id = ownerDiscordId;
+
+  return teamRepository.save(team);
+}
+
+async function listTeamRosters() {
+  return teamRepository.findAllWithPlayers();
+}
+
 module.exports = {
   createTeam,
-  getTeamById
+  getTeamById,
+  updateTeamDetails,
+  listTeamRosters
 };
 

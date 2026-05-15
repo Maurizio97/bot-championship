@@ -7,7 +7,7 @@ const { assertPositiveInteger } = require('../utils/validators');
 module.exports = {
   name: 'assignplayer',
   description: 'Assegna un giocatore a una squadra',
-  usage: '&assignplayer <playerId> <teamId>',
+  usage: '&assignplayer <nomeGiocatore|playerId> <teamId>',
   async execute(message, args) {
     const admin = await ensureAdminByMessage(message);
 
@@ -15,11 +15,15 @@ module.exports = {
       throw new Error(`Uso corretto: ${this.usage}`);
     }
 
-    const playerId = assertPositiveInteger(args[0], 'playerId');
-    const teamId = assertPositiveInteger(args[1], 'teamId');
+    const teamId = assertPositiveInteger(args[args.length - 1], 'teamId');
+    const playerIdentifier = args.slice(0, -1).join(' ').trim();
+
+    if (!playerIdentifier) {
+      throw new Error(`Uso corretto: ${this.usage}`);
+    }
 
     const result = await playerService.assignPlayerToTeam({
-      playerId,
+      playerIdentifier,
       toTeamId: teamId,
       adminId: admin.id
     });

@@ -61,17 +61,44 @@ Per fermare il DB:
 npm run db:down
 ```
 
+Bootstrap iniziale schema + seed admin (opzionale):
+
+```bash
+npm run db:bootstrap
+npm run db:bootstrap -- encke_
+```
+
+Seed 10 giocatori per test:
+
+```bash
+npm run db:seed:players
+```
+
+Nota: nel progetto `discord_id` viene usato come chiave testuale (username Discord).
+
+## Valuta interna
+
+- La valuta e gestita a unita semplici
+- Budget iniziale squadra: `700`
+- Prezzo giocatori e trasferimenti usano la stessa scala a unita
+
 ## Comandi implementati
 
-- `&addteam <nomeSquadra> <discordOwnerId>`
-- `&assignplayer <playerId> <teamId>`
+- `&addteam <nomeSquadra> <discordOwnerUsername>`
+- `&assignplayer <nomeGiocatore|playerId> <teamId>`
+- `&updateteam <teamId> <nuovoNomeSquadra> <ownerUsername>`
+- `&rose`
+- `&comandi`
 
-Entrambi richiedono che l'autore del messaggio sia presente nella tabella `admins`.
+I comandi admin (`&addteam`, `&assignplayer`, `&updateteam`) richiedono che l'autore del messaggio sia presente nella tabella `admins`.
+
+`&assignplayer` cerca il giocatore per nome; se trova piu risultati, suggerisce i primi 10 match con relativo ID.
 
 ## Schema database
 
 - SQL completo: `database/schema.sql`
 - Query esempio e seed: `database/example-queries.sql`
+- Seed 10 giocatori: `database/seed-players.sql`
 
 ## Relazioni principali
 

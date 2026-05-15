@@ -1,9 +1,14 @@
 const { BadRequestError } = require('./errors');
 
 function assertDiscordId(value, fieldName = 'discordId') {
-  if (!value || !/^\d{6,30}$/.test(value)) {
-    throw new BadRequestError(`${fieldName} non valido.`);
+  const normalized = String(value || '').trim();
+
+  // Username Discord: stringa breve con lettere/numeri e caratteri . _
+  if (!/^[a-z0-9._]{2,64}$/i.test(normalized)) {
+    throw new BadRequestError(`${fieldName} non valido. Usa username Discord (es. encke_).`);
   }
+
+  return normalized;
 }
 
 function assertPositiveInteger(value, fieldName = 'id') {

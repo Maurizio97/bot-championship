@@ -1,4 +1,4 @@
 module.exports = {
-  DEFAULT_TEAM_BUDGET: 100000000
+  DEFAULT_TEAM_BUDGET: 700
 };
 

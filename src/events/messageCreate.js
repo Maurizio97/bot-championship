@@ -12,11 +12,19 @@ module.exports = {
     const [commandName, ...args] = withoutPrefix.split(/\s+/);
     if (!commandName) return;
 
-    const command = commands.get(commandName.toLowerCase());
+    const normalizedCommandName = commandName.toLowerCase();
+    let command = commands.get(normalizedCommandName);
+
+    if (!command) {
+      command = [...commands.values()].find((item) =>
+        Array.isArray(item.aliases) && item.aliases.map((alias) => alias.toLowerCase()).includes(normalizedCommandName)
+      );
+    }
+
     if (!command) return;
 
     try {
-      await command.execute(message, args);
+      await command.execute(message, args, { commands, prefix: env.prefix });
     } catch (error) {
       const embed = errorEmbed('Operazione fallita', error.message || 'Errore non gestito.');
       await message.reply({ embeds: [embed] });

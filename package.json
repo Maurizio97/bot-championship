@@ -10,7 +10,9 @@
     "test": "node --test",
     "db:up": "docker compose up -d postgres",
     "db:down": "docker compose down",
-    "db:logs": "docker compose logs -f postgres"
+    "db:logs": "docker compose logs -f postgres",
+    "db:bootstrap": "node scripts/db-bootstrap.js",
+    "db:seed:players": "node scripts/db-seed-players.js"
   },
   "engines": {
     "node": ">=20"

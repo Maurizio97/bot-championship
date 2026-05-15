@@ -1,5 +1,5 @@
 module.exports = {
-  name: 'ready',
+  name: 'clientReady',
   once: true,
   async execute(client) {
     // eslint-disable-next-line no-console

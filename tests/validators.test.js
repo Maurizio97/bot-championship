@@ -11,11 +11,11 @@ test('assertPositiveInteger lancia errore su valore non valido', () => {
   assert.throws(() => assertPositiveInteger('abc', 'playerId'));
 });
 
-test('assertDiscordId accetta ID numerico', () => {
-  assert.doesNotThrow(() => assertDiscordId('123456789'));
+test('assertDiscordId accetta username Discord valido', () => {
+  assert.equal(assertDiscordId('encke_'), 'encke_');
 });
 
-test('assertDiscordId rifiuta valore non numerico', () => {
-  assert.throws(() => assertDiscordId('abc'));
+test('assertDiscordId rifiuta username Discord non valido', () => {
+  assert.throws(() => assertDiscordId('bad username!'));
 });
 

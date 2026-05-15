@@ -6,8 +6,9 @@ const { assertDiscordId } = require('../utils/validators');
 
 module.exports = {
   name: 'addteam',
+  aliases: ['aggiungiteam'],
   description: 'Crea una nuova squadra',
-  usage: '&addteam <nomeSquadra> <discordOwnerId>',
+  usage: '&addteam <nomeSquadra> <discordOwnerUsername>',
   async execute(message, args) {
     await ensureAdminByMessage(message);
 
@@ -15,9 +16,9 @@ module.exports = {
       throw new Error(`Uso corretto: ${this.usage}`);
     }
 
-    const ownerDiscordId = args[args.length - 1];
+    const rawOwnerDiscordId = args[args.length - 1];
     const name = args.slice(0, -1).join(' ');
-    assertDiscordId(ownerDiscordId, 'discordOwnerId');
+    const ownerDiscordId = assertDiscordId(rawOwnerDiscordId, 'discordOwnerUsername');
 
     const team = await teamService.createTeam({
       name,

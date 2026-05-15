@@ -11,7 +11,7 @@ Admin.init(
       primaryKey: true
     },
     discord_id: {
-      type: DataTypes.STRING(30),
+      type: DataTypes.STRING(64),
       allowNull: false,
       unique: true,
       validate: {

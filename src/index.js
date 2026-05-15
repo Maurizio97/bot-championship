@@ -3,6 +3,9 @@ const env = require('./config/env');
 const { initDatabase } = require('./database/init');
 const readyEvent = require('./events/ready');
 const messageCreateEvent = require('./events/messageCreate');
+const { startHealthServer } = require('./server/healthServer');
+
+startHealthServer();
 
 async function bootstrap() {
   await initDatabase();
