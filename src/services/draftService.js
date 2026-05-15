@@ -7,6 +7,7 @@ const transferRepository = require('../repositories/transferRepository');
 const budgetLogRepository = require('../repositories/budgetLogRepository');
 const stateManagerService = require('./stateManagerService');
 const playerService = require('./playerService');
+const env = require('../config/env');
 const { BadRequestError, ConflictError, ForbiddenError, NotFoundError } = require('../utils/errors');
 
 function shuffle(items) {
@@ -105,7 +106,7 @@ async function skipTurn() {
 
     const order = await getDraftOrder({ transaction });
     if (order.length === 0) {
-      throw new NotFoundError('Ordine draft non trovato. Avvia prima &iniziodraft.');
+      throw new NotFoundError(`Ordine draft non trovato. Avvia prima ${env.prefix}iniziodraft.`);
     }
 
     await stateManagerService.advanceDraftTurn({

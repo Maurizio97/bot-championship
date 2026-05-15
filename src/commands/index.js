@@ -1,3 +1,4 @@
+const env = require('../config/env');
 const addteam = require('./addteam');
 const addadmin = require('./addadmin');
 const admins = require('./admins');
@@ -23,6 +24,14 @@ const aprimercato = require('./aprimercato');
 
 const commands = new Map();
 
+function normalizeUsage(usage) {
+  if (typeof usage !== 'string' || !usage.startsWith('&')) {
+    return usage;
+  }
+
+  return `${env.prefix}${usage.slice(1)}`;
+}
+
 for (const command of [
   addteam,
   addadmin,
@@ -47,6 +56,7 @@ for (const command of [
   valore,
   aprimercato
 ]) {
+  command.usage = normalizeUsage(command.usage);
   commands.set(command.name, command);
 }
 

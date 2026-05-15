@@ -6,10 +6,11 @@ module.exports = {
   usage: '&comandi',
   async execute(message, args, context = {}) {
     const commands = context.commands;
+    const prefix = context.prefix || '&';
     const list = [];
     if (commands && commands.size > 0) {
       for (const [, command] of commands) {
-        list.push(`- \`${command.usage || `&${command.name}`}\` - ${command.description || 'Nessuna descrizione'}`);
+        list.push(`- \`${command.usage || `${prefix}${command.name}`}\` - ${command.description || 'Nessuna descrizione'}`);
       }
     }
 
