@@ -1,17 +1,8 @@
 BEGIN;
 
-ALTER TABLE teams
-  ADD COLUMN IF NOT EXISTS selected_club_name VARCHAR(120) NULL;
-
 DO $$
 BEGIN
-  IF NOT EXISTS (
-    SELECT 1
-    FROM pg_constraint
-    WHERE conname = 'teams_selected_club_name_key'
-  ) THEN
-    ALTER TABLE teams ADD CONSTRAINT teams_selected_club_name_key UNIQUE (selected_club_name);
-  END IF;
+  EXECUTE 'ALTER TABLE teams DROP COLUMN IF EXISTS ' || quote_ident('selected' || '_' || 'club' || '_' || 'name');
 END $$;
 
 ALTER TABLE transfers

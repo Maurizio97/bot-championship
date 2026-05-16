@@ -39,10 +39,6 @@ async function findByOwnerDiscordCandidates(candidates) {
   });
 }
 
-async function findBySelectedClubName(clubName) {
-  return Team.findOne({ where: { selected_club_name: clubName } });
-}
-
 async function findAllOrdered() {
   return Team.findAll({
     order: [['name', 'ASC']]
@@ -89,7 +85,6 @@ module.exports = {
   findByIdForUpdate,
   findByOwnerDiscordId,
   findByOwnerDiscordCandidates,
-  findBySelectedClubName,
   findAllOrdered,
   findByNameInsensitive,
   createTeam,

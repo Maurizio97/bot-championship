@@ -63,8 +63,8 @@ COMMIT
 &sceglisquadra:
   require team_selection_status == ACTIVE
   require caller == draft_orders[current_team_selection_turn].discord_user_id
-  require selected_club_name univoco
-  update teams.selected_club_name
+  require teams.name univoco
+  update teams.name
   advance current_team_selection_turn
   if finito -> team_selection_status = CLOSED
 ```

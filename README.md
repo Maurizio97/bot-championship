@@ -116,7 +116,7 @@ Nota: per selezionare un utente nei comandi admin/team owner, la mention Discord
 - `league_state`: singleton globale con stato draft/mercato/team selection, turno e round correnti
 - `draft_orders`: ordine persistente per `TEAM_SELECTION` e `PLAYER_DRAFT`
 - `budget_logs`: storico completo accrediti/addebiti/pick
-- `teams.selected_club_name`: club FC scelto durante team selection
+- `teams.name`: nome squadra/club registrato e scelto durante team selection
 
 ## Draft e restart bot
 

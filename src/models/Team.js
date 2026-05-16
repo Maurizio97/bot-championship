@@ -34,14 +34,6 @@ Team.init(
       validate: {
         min: 0
       }
-    },
-    selected_club_name: {
-      type: DataTypes.STRING(120),
-      allowNull: true,
-      unique: true,
-      validate: {
-        len: [2, 120]
-      }
     }
   },
   {

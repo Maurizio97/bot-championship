@@ -8,10 +8,8 @@ function rosterToField(team) {
     ? players.map((player) => `${player.player_name} (${player.overall})`).join(', ')
     : 'Nessun giocatore assegnato';
 
-  const club = team.selected_club_name ? ` | Club FC: ${team.selected_club_name}` : '';
-
   return {
-    name: `${team.name} (ID ${team.id})${club}`,
+    name: `${team.name} (ID ${team.id})`,
     value: roster.slice(0, 1024)
   };
 }

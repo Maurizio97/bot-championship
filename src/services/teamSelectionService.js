@@ -118,13 +118,13 @@ async function selectClub({ discordUserId, discordUserCandidates = [], clubName 
       throw new ForbiddenError('Non e il tuo turno per scegliere la squadra.');
     }
 
-    const alreadySelected = await teamRepository.findBySelectedClubName(normalizedClubName);
-    if (alreadySelected) {
+    const team = await teamRepository.findByIdForUpdate(currentEntry.team_id, transaction);
+    const alreadySelected = await teamRepository.findByNameInsensitive(normalizedClubName, { transaction });
+    if (alreadySelected && alreadySelected.id !== team.id) {
       throw new ConflictError(`Il club ${normalizedClubName} e gia stato scelto.`);
     }
 
-    const team = await teamRepository.findByIdForUpdate(currentEntry.team_id, transaction);
-    team.selected_club_name = normalizedClubName;
+    team.name = normalizedClubName;
     await teamRepository.save(team, { transaction });
 
     state.current_team_selection_turn += 1;
@@ -135,7 +135,7 @@ async function selectClub({ discordUserId, discordUserCandidates = [], clubName 
     await state.save({ transaction });
 
     // eslint-disable-next-line no-console
-    console.log(`[TEAM_SELECTION] ${team.name} selected ${normalizedClubName}`);
+    console.log(`[TEAM_SELECTION] team ${team.id} renamed to ${normalizedClubName}`);
 
     return {
       team,
