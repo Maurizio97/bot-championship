@@ -1,5 +1,6 @@
 const playerService = require('../services/playerService');
 const { successEmbed } = require('../utils/embedFactory');
+const { formatTeamLabel } = require('../utils/discordIdentity');
 
 module.exports = {
   name: 'chi',
@@ -13,7 +14,7 @@ module.exports = {
 
     const info = await playerService.getPlayerValueInfo(playerIdentifier);
     const owner = info.ownerTeam
-      ? `${info.ownerTeam.name} (${info.ownerTeam.owner_discord_id})`
+      ? formatTeamLabel(info.ownerTeam)
       : 'Nessuno, giocatore svincolato';
 
     const embed = successEmbed('Proprieta giocatore', `${info.player.player_name}: ${owner}`);

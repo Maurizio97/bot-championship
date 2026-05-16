@@ -1,6 +1,7 @@
 const draftService = require('../services/draftService');
 const { ensureAdminByMessage } = require('../utils/adminGuard');
 const { successEmbed } = require('../utils/embedFactory');
+const { formatTeamLabel } = require('../utils/discordIdentity');
 
 module.exports = {
   name: 'iniziodraft',
@@ -10,7 +11,7 @@ module.exports = {
     await ensureAdminByMessage(message);
 
     const result = await draftService.startDraft();
-    const orderLabel = result.order.map((item) => `${item.position + 1}. ${item.team?.name || item.discord_user_id}`).join('\n');
+    const orderLabel = result.order.map((item) => `${item.position + 1}. ${item.team ? formatTeamLabel(item.team) : item.discord_user_id}`).join('\n');
 
     const embed = successEmbed('Draft avviato', 'Nuovo ordine randomico persistito.', [
       { name: 'Round', value: String(result.state.current_round), inline: true },

@@ -1,6 +1,7 @@
 const budgetService = require('../services/budgetService');
 const { ensureAdminByMessage } = require('../utils/adminGuard');
 const { successEmbed } = require('../utils/embedFactory');
+const { formatTeamLabel } = require('../utils/discordIdentity');
 const { assertPositiveAmount } = require('../utils/validators');
 
 module.exports = {
@@ -31,7 +32,7 @@ module.exports = {
     });
 
     const embed = successEmbed('Budget aggiornato', 'Debito applicato con log persistente.', [
-      { name: 'Squadra', value: team.name, inline: true },
+      { name: 'Squadra', value: formatTeamLabel(team), inline: true },
       { name: 'Nuovo budget', value: String(team.budget), inline: true }
     ]);
 

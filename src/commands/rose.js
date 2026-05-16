@@ -1,5 +1,6 @@
 const teamService = require('../services/teamService');
 const { successEmbed } = require('../utils/embedFactory');
+const { formatTeamLabel } = require('../utils/discordIdentity');
 
 module.exports = {
   name: 'rose',
@@ -21,7 +22,7 @@ module.exports = {
         : 'Nessun giocatore assegnato';
 
       return {
-        name: `${team.name} (ID ${team.id})`,
+        name: `${formatTeamLabel(team)} (ID ${team.id})`,
         value: roster.slice(0, 1024)
       };
     });

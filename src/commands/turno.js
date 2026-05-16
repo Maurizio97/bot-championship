@@ -1,5 +1,6 @@
 const draftService = require('../services/draftService');
 const { successEmbed } = require('../utils/embedFactory');
+const { formatTeamLabel } = require('../utils/discordIdentity');
 
 module.exports = {
   name: 'turno',
@@ -11,8 +12,7 @@ module.exports = {
     const embed = successEmbed('Turno draft', 'Stato corrente del draft persistito in DB.', [
       { name: 'Round', value: String(state.current_round), inline: true },
       { name: 'Posizione turno', value: String(state.current_draft_turn + 1), inline: true },
-      { name: 'Squadra', value: currentEntry?.team?.name || 'N/A', inline: true },
-      { name: 'Owner Discord', value: currentEntry?.discord_user_id || 'N/A', inline: true }
+      { name: 'Squadra', value: currentEntry?.team ? formatTeamLabel(currentEntry.team) : 'N/A', inline: true }
     ]);
 
     await message.reply({ embeds: [embed] });

@@ -1,15 +1,7 @@
 const adminService = require('../services/adminService');
 const { ensureAdminByMessage } = require('../utils/adminGuard');
 const { successEmbed } = require('../utils/embedFactory');
-
-function formatAdminIdentity(discordId) {
-  const normalized = String(discordId || '').trim();
-  if (/^\d{17,20}$/.test(normalized)) {
-    return `<@${normalized}> (${normalized})`;
-  }
-
-  return `@${normalized}`;
-}
+const { formatDiscordIdentity } = require('../utils/discordIdentity');
 
 module.exports = {
   name: 'admins',
@@ -20,7 +12,7 @@ module.exports = {
 
     const admins = await adminService.listAdmins();
     const description = admins.length
-      ? admins.map((admin) => `- ${formatAdminIdentity(admin.discord_id)} (${admin.role})`).join('\n')
+      ? admins.map((admin) => `- ${formatDiscordIdentity(admin.discord_id)} (${admin.role})`).join('\n')
       : 'Nessun admin registrato.';
 
     const embed = successEmbed('Amministratori', description);

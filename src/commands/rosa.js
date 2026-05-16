@@ -1,6 +1,6 @@
 const teamService = require('../services/teamService');
 const { successEmbed } = require('../utils/embedFactory');
-const { getDiscordIdentityCandidates } = require('../utils/discordIdentity');
+const { formatTeamLabel, getDiscordIdentityCandidates } = require('../utils/discordIdentity');
 
 function rosterToField(team) {
   const players = team.players || [];
@@ -9,7 +9,7 @@ function rosterToField(team) {
     : 'Nessun giocatore assegnato';
 
   return {
-    name: `${team.name} (ID ${team.id})`,
+    name: `Squadra (ID ${team.id})`,
     value: roster.slice(0, 1024)
   };
 }
@@ -25,14 +25,14 @@ module.exports = {
       const ownTeam = await teamService.getTeamByOwnerCandidates(candidates);
       const team = await teamService.getRosterByTeamName(ownTeam.name);
 
-      const embed = successEmbed('La tua rosa', 'Dati squadra correnti.', [rosterToField(team)]);
+      const embed = successEmbed('La tua rosa', `Dati squadra correnti: ${formatTeamLabel(team)}.`, [rosterToField(team)]);
       await message.reply({ embeds: [embed] });
       return;
     }
 
     const teamName = args.join(' ').trim();
     const team = await teamService.getRosterByTeamName(teamName);
-    const embed = successEmbed(`Rosa ${team.name}`, 'Dettaglio rosa richiesta.', [rosterToField(team)]);
+    const embed = successEmbed('Rosa squadra', `Dettaglio rosa richiesta: ${formatTeamLabel(team)}.`, [rosterToField(team)]);
     await message.reply({ embeds: [embed] });
   }
 };

@@ -118,6 +118,8 @@ Nota: per selezionare un utente nei comandi admin/team owner, la mention Discord
 - `budget_logs`: storico completo accrediti/addebiti/pick
 - `teams.name`: nome squadra/club registrato e scelto durante team selection
 
+Nota UI: quando un comando restituisce una squadra, l'output mostra sempre anche il tag Discord dell'owner di fianco al nome.
+
 ## Draft e restart bot
 
 - Ordine, round, turno e status sono persistiti in DB: restart non azzera i progressi.

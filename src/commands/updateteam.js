@@ -1,6 +1,7 @@
 const teamService = require('../services/teamService');
 const { ensureAdminByMessage } = require('../utils/adminGuard');
 const { successEmbed } = require('../utils/embedFactory');
+const { formatTeamLabel } = require('../utils/discordIdentity');
 const { assertDiscordTag, assertPositiveInteger } = require('../utils/validators');
 
 module.exports = {
@@ -31,8 +32,7 @@ module.exports = {
 
     const embed = successEmbed('Squadra aggiornata', 'Dati squadra aggiornati con successo.', [
       { name: 'Team ID', value: String(updated.id), inline: true },
-      { name: 'Nuovo nome', value: updated.name, inline: true },
-      { name: 'Owner', value: updated.owner_discord_id, inline: true }
+      { name: 'Squadra', value: formatTeamLabel(updated), inline: true }
     ]);
 
     await message.reply({ embeds: [embed] });

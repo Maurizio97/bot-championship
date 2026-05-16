@@ -1,6 +1,6 @@
 const budgetService = require('../services/budgetService');
 const { successEmbed } = require('../utils/embedFactory');
-const { getDiscordIdentityCandidates } = require('../utils/discordIdentity');
+const { formatTeamLabel, getDiscordIdentityCandidates } = require('../utils/discordIdentity');
 
 module.exports = {
   name: 'budget',
@@ -12,7 +12,7 @@ module.exports = {
       : await budgetService.getTeamBudgetInfoByOwner(getDiscordIdentityCandidates(message.author));
 
     const embed = successEmbed('Budget squadra', 'Situazione economica attuale.', [
-      { name: 'Squadra', value: info.team.name, inline: true },
+      { name: 'Squadra', value: formatTeamLabel(info.team), inline: true },
       { name: 'Budget residuo', value: String(info.budget), inline: true },
       { name: 'Totale giocatori', value: String(info.totalPlayers), inline: true },
       { name: 'Valore rosa', value: String(info.rosterValue), inline: true }
