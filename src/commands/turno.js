@@ -5,7 +5,9 @@ const { formatTeamLabel } = require('../utils/discordIdentity');
 module.exports = {
   name: 'turno',
   description: 'Mostra turno draft corrente',
-  usage: '&turno',
+  usage: 'turno',
+  category: 'Info',
+  adminOnly: false,
   async execute(message) {
     const { state, currentEntry } = await draftService.getCurrentTurnInfo();
 

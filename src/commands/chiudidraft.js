@@ -5,7 +5,9 @@ const { successEmbed } = require('../utils/embedFactory');
 module.exports = {
   name: 'chiudidraft',
   description: 'Chiude il draft giocatori',
-  usage: '&chiudidraft',
+  usage: 'chiudidraft',
+  category: 'Draft',
+  adminOnly: true,
   async execute(message) {
     await ensureAdminByMessage(message);
     await draftService.closeDraft();

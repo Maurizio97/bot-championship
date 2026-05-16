@@ -5,7 +5,9 @@ const { successEmbed } = require('../utils/embedFactory');
 module.exports = {
   name: 'chiudimercato',
   description: 'Chiude il mercato',
-  usage: '&chiudimercato',
+  usage: 'chiudimercato',
+  category: 'Mercato',
+  adminOnly: true,
   async execute(message) {
     await ensureAdminByMessage(message);
     await marketService.closeMarket();

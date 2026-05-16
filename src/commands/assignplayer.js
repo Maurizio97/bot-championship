@@ -7,7 +7,9 @@ const { assertPositiveInteger } = require('../utils/validators');
 module.exports = {
   name: 'assignplayer',
   description: 'Assegna un giocatore a una squadra',
-  usage: '&assignplayer <nomeGiocatore|playerId> <teamId>',
+  usage: 'assignplayer <nomeGiocatore|playerId> <teamId>',
+  category: 'Gestione Giocatori',
+  adminOnly: true,
   async execute(message, args) {
     const admin = await ensureAdminByMessage(message);
 

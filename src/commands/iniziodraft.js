@@ -6,7 +6,9 @@ const { formatTeamLabel } = require('../utils/discordIdentity');
 module.exports = {
   name: 'iniziodraft',
   description: 'Avvia draft giocatori con nuovo ordine casuale',
-  usage: '&iniziodraft',
+  usage: 'iniziodraft',
+  category: 'Draft',
+  adminOnly: true,
   async execute(message) {
     await ensureAdminByMessage(message);
 

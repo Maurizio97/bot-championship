@@ -18,7 +18,9 @@ module.exports = {
   name: 'rosa',
   aliases: ['rose'],
   description: 'Mostra rosa tua o di una squadra specifica',
-  usage: '&rosa [nomeSquadra]',
+  usage: 'rosa [nomeSquadra]',
+  category: 'Info',
+  adminOnly: false,
   async execute(message, args) {
     if (args.length === 0) {
       const candidates = getDiscordIdentityCandidates(message.author);

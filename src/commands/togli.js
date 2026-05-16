@@ -7,7 +7,9 @@ const { assertPositiveAmount } = require('../utils/validators');
 module.exports = {
   name: 'togli',
   description: 'Rimuove budget da una squadra',
-  usage: '&togli <teamName> <amount> <reason>',
+  usage: 'togli <teamName> <amount> <reason>',
+  category: 'Gestione Budget',
+  adminOnly: true,
   async execute(message, args) {
     const admin = await ensureAdminByMessage(message);
 

@@ -9,7 +9,9 @@ module.exports = {
   name: 'addteam',
   aliases: ['aggiungiteam'],
   description: 'Crea una nuova squadra',
-  usage: '&addteam <nomeSquadra> <@owner>',
+  usage: 'addteam <nomeSquadra> <@owner>',
+  category: 'Gestione Team',
+  adminOnly: true,
   async execute(message, args) {
     await ensureAdminByMessage(message);
 

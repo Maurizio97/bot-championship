@@ -7,6 +7,8 @@ module.exports = {
   name: 'admins',
   description: 'Mostra elenco amministratori',
   usage: '&admins',
+  category: 'Gestione Staff',
+  adminOnly: true,
   async execute(message) {
     await ensureAdminByMessage(message);
 

@@ -1,35 +1,30 @@
 const { successEmbed } = require('../utils/embedFactory');
+const { ensureAdminByMessage } = require('../utils/adminGuard');
 
 module.exports = {
-  name: 'comandi',
-  description: 'Mostra l\'elenco dei comandi disponibili',
-  usage: 'comandi',
+  name: 'comandistaff',
+  description: 'Mostra l\'elenco di TUTTI i comandi (solo admin)',
+  usage: 'comandistaff',
   category: 'Utility',
-  adminOnly: false,
+  adminOnly: true,
   async execute(message, args, context = {}) {
     try {
+      await ensureAdminByMessage(message);
+
       const commands = context.commands;
       const prefix = context.prefix || '!';
 
-      // Filter out admin-only commands
-      const userCommands = [];
+      // Group all commands by category
+      const categories = {};
       if (commands && commands.size > 0) {
         for (const [, command] of commands) {
-          if (!command.adminOnly) {
-            userCommands.push(command);
+          const category = command.category || 'Altro';
+          if (!categories[category]) {
+            categories[category] = [];
           }
+          categories[category].push(command);
         }
       }
-
-      // Group by category
-      const categories = {};
-      userCommands.forEach((command) => {
-        const category = command.category || 'Altro';
-        if (!categories[category]) {
-          categories[category] = [];
-        }
-        categories[category].push(command);
-      });
 
       // Create embed fields for each category
       const fields = [];
@@ -38,7 +33,10 @@ module.exports = {
       for (const category of sortedCategories) {
         const cmds = categories[category];
         const commandList = cmds
-          .map((cmd) => `\`${cmd.usage || `${prefix}${cmd.name}`}\` - ${cmd.description || 'Nessuna descrizione'}`)
+          .map((cmd) => {
+            const adminIndicator = cmd.adminOnly ? ' 🔐' : '';
+            return `\`${cmd.usage || `${prefix}${cmd.name}`}\` - ${cmd.description || 'Nessuna descrizione'}${adminIndicator}`;
+          })
           .join('\n')
           .slice(0, 1024); // Limit field value to 1024 chars
 
@@ -51,10 +49,10 @@ module.exports = {
         }
       }
 
-      const embed = successEmbed('Elenco comandi disponibili', 'Digita il comando per ricevere aiuto', fields);
+      const embed = successEmbed('Elenco comandi (Staff)', '🔐 = Solo Admin', fields);
       await message.reply({ embeds: [embed] });
     } catch (error) {
-      console.error('Errore nel comando comandi:', error);
+      console.error('Errore nel comando comandistaff:', error);
       throw error;
     }
   }

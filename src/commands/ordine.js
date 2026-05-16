@@ -5,7 +5,9 @@ const { formatTeamLabel } = require('../utils/discordIdentity');
 module.exports = {
   name: 'ordine',
   description: 'Mostra ordine draft completo',
-  usage: '&ordine',
+  usage: 'ordine',
+  category: 'Info',
+  adminOnly: false,
   async execute(message) {
     const order = await draftService.getDraftOrder();
     const text = order.length

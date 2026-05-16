@@ -6,7 +6,9 @@ const { assertDiscordTag } = require('../utils/validators');
 module.exports = {
   name: 'removeadmin',
   description: 'Rimuove un amministratore',
-  usage: '&removeadmin <@utente>',
+  usage: 'removeadmin <@utente>',
+  category: 'Gestione Staff',
+  adminOnly: true,
   async execute(message, args) {
     await ensureAdminByMessage(message);
 

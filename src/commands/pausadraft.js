@@ -3,16 +3,16 @@ const { ensureAdminByMessage } = require('../utils/adminGuard');
 const { successEmbed } = require('../utils/embedFactory');
 
 module.exports = {
-  name: 'continua',
-  description: 'Riprende il draft dalla posizione persistita',
-  usage: 'continua',
+  name: 'pausadraft',
+  description: 'Mette in pausa il draft giocatori',
+  usage: 'pausadraft',
   category: 'Draft',
   adminOnly: true,
   async execute(message) {
     await ensureAdminByMessage(message);
-    const state = await draftService.continueDraft();
+    const state = await draftService.stopDraft();
 
-    const embed = successEmbed('Draft ripreso', 'Ripresa completata dal turno salvato.', [
+    const embed = successEmbed('Draft in pausa', 'Il draft è stato messo in pausa.', [
       { name: 'Round', value: String(state.current_round), inline: true },
       { name: 'Turno', value: String(state.current_draft_turn), inline: true }
     ]);
@@ -20,4 +20,5 @@ module.exports = {
     await message.reply({ embeds: [embed] });
   }
 };
+
 

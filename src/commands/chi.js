@@ -5,7 +5,9 @@ const { formatTeamLabel } = require('../utils/discordIdentity');
 module.exports = {
   name: 'chi',
   description: 'Mostra chi possiede un giocatore',
-  usage: '&chi <nomeGiocatore|playerId>',
+  usage: 'chi <nomeGiocatore|playerId>',
+  category: 'Info',
+  adminOnly: false,
   async execute(message, args) {
     const playerIdentifier = args.join(' ').trim();
     if (!playerIdentifier) {

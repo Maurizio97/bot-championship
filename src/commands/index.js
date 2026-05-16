@@ -9,12 +9,12 @@ const budget = require('./budget');
 const chi = require('./chi');
 const chiudidraft = require('./chiudidraft');
 const chiudimercato = require('./chiudimercato');
-const closeteams = require('./closeteams');
 const comandi = require('./comandi');
+const comandistaff = require('./comandistaff');
 const continua = require('./continua');
-const continueteams = require('./continueteams');
 const iniziodraft = require('./iniziodraft');
 const ordine = require('./ordine');
+const pausadraft = require('./pausadraft');
 const rosa = require('./rosa');
 const togli = require('./togli');
 const turno = require('./turno');
@@ -25,11 +25,17 @@ const aprimercato = require('./aprimercato');
 const commands = new Map();
 
 function normalizeUsage(usage) {
-  if (typeof usage !== 'string' || !usage.startsWith('&')) {
+  const prefix = env.prefix || '!';
+  if (typeof usage !== 'string' || !usage) {
     return usage;
   }
 
-  return `${env.prefix}${usage.slice(1)}`;
+  // Se non inizia già con il prefix, aggiungilo
+  if (!usage.startsWith(prefix)) {
+    return `${prefix}${usage}`;
+  }
+
+  return usage;
 }
 
 for (const command of [
@@ -43,12 +49,12 @@ for (const command of [
   chi,
   chiudidraft,
   chiudimercato,
-  closeteams,
   comandi,
+  comandistaff,
   continua,
-  continueteams,
   iniziodraft,
   ordine,
+  pausadraft,
   rosa,
   togli,
   turno,

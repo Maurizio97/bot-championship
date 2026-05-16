@@ -7,7 +7,9 @@ const { assertDiscordTag, assertPositiveInteger } = require('../utils/validators
 module.exports = {
   name: 'updateteam',
   description: 'Modifica nome squadra e utente assegnato',
-  usage: '&updateteam <teamId> <nuovoNomeSquadra> <@owner>',
+  usage: 'updateteam <teamId> <nuovoNomeSquadra> <@owner>',
+  category: 'Gestione Team',
+  adminOnly: true,
   async execute(message, args) {
     await ensureAdminByMessage(message);
 

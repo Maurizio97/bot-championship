@@ -6,7 +6,9 @@ const { assertDiscordTag } = require('../utils/validators');
 module.exports = {
   name: 'addadmin',
   description: 'Aggiunge un nuovo amministratore',
-  usage: '&addadmin <@utente> <role>',
+  usage: 'addadmin <@utente> <role>',
+  category: 'Gestione Staff',
+  adminOnly: true,
   async execute(message, args) {
     await ensureAdminByMessage(message);
 

@@ -4,7 +4,9 @@ const { successEmbed } = require('../utils/embedFactory');
 module.exports = {
   name: 'valore',
   description: 'Mostra dati e disponibilita di un giocatore',
-  usage: '&valore <nomeGiocatore|playerId>',
+  usage: 'valore <nomeGiocatore|playerId>',
+  category: 'Info',
+  adminOnly: false,
   async execute(message, args) {
     const playerIdentifier = args.join(' ').trim();
     if (!playerIdentifier) {

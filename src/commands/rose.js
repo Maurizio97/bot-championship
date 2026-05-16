@@ -5,7 +5,9 @@ const { formatTeamLabel } = require('../utils/discordIdentity');
 module.exports = {
   name: 'rose',
   description: 'Mostra l\'elenco di tutte le rose disponibili',
-  usage: '&rose',
+  usage: 'rose',
+  category: 'Info',
+  adminOnly: false,
   async execute(message) {
     const teams = await teamService.listTeamRosters();
 
