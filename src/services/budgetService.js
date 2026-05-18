@@ -11,8 +11,23 @@ function parseAmount(amount) {
   return parsed;
 }
 
+function buildOwnerCandidates(rawIdentifier) {
+  const normalized = String(rawIdentifier || '').trim();
+  if (!normalized) {
+    return [];
+  }
+
+  const mentionMatch = normalized.match(/^<@!?(\d{17,20})>$/);
+  if (mentionMatch) {
+    return [mentionMatch[1]];
+  }
+
+  const noAtPrefix = normalized.startsWith('@') ? normalized.slice(1).trim() : '';
+  return noAtPrefix ? [normalized, noAtPrefix] : [normalized];
+}
+
 async function findTeamByNameOrFail(teamName, options = {}) {
-  const team = await teamRepository.findByNameInsensitive(teamName, options);
+  const team = await teamRepository.findByNameOrOwnerCandidates(teamName, buildOwnerCandidates(teamName), options);
   if (!team) {
     throw new NotFoundError(`Squadra ${teamName} non trovata.`);
   }

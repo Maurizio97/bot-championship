@@ -6,7 +6,7 @@ module.exports = {
   name: 'ordine',
   description: 'Mostra ordine draft completo',
   usage: 'ordine',
-  category: 'Info',
+  category: 'Draft',
   adminOnly: false,
   async execute(message) {
     const order = await draftService.getDraftOrder();

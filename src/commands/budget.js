@@ -5,7 +5,7 @@ const { formatTeamLabel, getDiscordIdentityCandidates } = require('../utils/disc
 module.exports = {
   name: 'budget',
   description: 'Mostra budget residuo, valore rosa e totale giocatori',
-  usage: 'budget [nomeSquadra]',
+  usage: 'budget [nomeSquadra|@owner]',
   category: 'Info',
   adminOnly: false,
   async execute(message, args) {

@@ -6,7 +6,7 @@ module.exports = {
   name: 'turno',
   description: 'Mostra turno draft corrente',
   usage: 'turno',
-  category: 'Info',
+  category: 'Draft',
   adminOnly: false,
   async execute(message) {
     const { state, currentEntry } = await draftService.getCurrentTurnInfo();

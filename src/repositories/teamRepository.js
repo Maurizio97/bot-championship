@@ -55,6 +55,38 @@ async function findByNameInsensitive(name, options = {}) {
   });
 }
 
+async function findByNameOrOwnerCandidates(nameOrIdentifier, ownerCandidates = [], options = {}) {
+  const normalizedName = String(nameOrIdentifier || '').trim().toLowerCase();
+  const normalizedCandidates = (Array.isArray(ownerCandidates) ? ownerCandidates : [])
+    .map((item) => String(item || '').trim())
+    .filter(Boolean);
+
+  const orConditions = [];
+
+  if (normalizedName) {
+    orConditions.push(where(fn('LOWER', col('name')), { [Op.eq]: normalizedName }));
+  }
+
+  if (normalizedCandidates.length > 0) {
+    orConditions.push({
+      owner_discord_id: {
+        [Op.in]: normalizedCandidates
+      }
+    });
+  }
+
+  if (orConditions.length === 0) {
+    return null;
+  }
+
+  return Team.findOne({
+    where: {
+      [Op.or]: orConditions
+    },
+    ...options
+  });
+}
+
 async function createTeam(data) {
   return Team.create(data);
 }
@@ -87,6 +119,7 @@ module.exports = {
   findByOwnerDiscordCandidates,
   findAllOrdered,
   findByNameInsensitive,
+  findByNameOrOwnerCandidates,
   createTeam,
   save,
   findAllWithPlayers

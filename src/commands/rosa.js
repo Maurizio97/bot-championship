@@ -18,7 +18,7 @@ module.exports = {
   name: 'rosa',
   aliases: ['rose'],
   description: 'Mostra rosa tua o di una squadra specifica',
-  usage: 'rosa [nomeSquadra]',
+  usage: 'rosa [nomeSquadra|@owner]',
   category: 'Info',
   adminOnly: false,
   async execute(message, args) {

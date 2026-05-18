@@ -60,14 +60,34 @@ async function getTeamByOwnerCandidates(candidates) {
   return team;
 }
 
+function buildOwnerCandidates(rawIdentifier) {
+  const normalized = String(rawIdentifier || '').trim();
+  if (!normalized) {
+    return [];
+  }
+
+  const mentionMatch = normalized.match(/^<@!?(\d{17,20})>$/);
+  if (mentionMatch) {
+    return [mentionMatch[1]];
+  }
+
+  const noAtPrefix = normalized.startsWith('@') ? normalized.slice(1).trim() : '';
+  return noAtPrefix ? [normalized, noAtPrefix] : [normalized];
+}
+
 async function getRosterByTeamName(teamName) {
   const normalized = String(teamName || '').trim();
   if (!normalized) {
-    throw new BadRequestError('Nome squadra obbligatorio.');
+    throw new BadRequestError('Nome squadra o tag proprietario obbligatorio.');
+  }
+
+  const teamByIdentifier = await teamRepository.findByNameOrOwnerCandidates(normalized, buildOwnerCandidates(normalized));
+  if (!teamByIdentifier) {
+    throw new NotFoundError(`Squadra ${teamName} non trovata.`);
   }
 
   const all = await teamRepository.findAllWithPlayers();
-  const team = all.find((item) => item.name.toLowerCase() === normalized.toLowerCase());
+  const team = all.find((item) => item.id === teamByIdentifier.id);
 
   if (!team) {
     throw new NotFoundError(`Squadra ${teamName} non trovata.`);
