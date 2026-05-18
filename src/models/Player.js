@@ -26,14 +26,6 @@ Player.init(
         max: 99
       }
     },
-    potential_overall: {
-      type: DataTypes.INTEGER,
-      allowNull: false,
-      validate: {
-        min: 1,
-        max: 99
-      }
-    },
     role: {
       type: DataTypes.STRING(40),
       allowNull: false,

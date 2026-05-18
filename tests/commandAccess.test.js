@@ -10,6 +10,7 @@ const valore = require('../src/commands/valore');
 const comandi = require('../src/commands/comandi');
 const scegli = require('../src/commands/scegli');
 const assegna = require('../src/commands/assegna');
+const teams = require('../src/commands/teams');
 
 const publicCommands = [
   ordine,
@@ -34,5 +35,9 @@ test('i comandi informativi restano accessibili agli utenti normali', () => {
 
 test('il comando assegna resta riservato allo staff', () => {
   assert.equal(assegna.adminOnly, true);
+});
+
+test('il comando teams resta riservato allo staff', () => {
+  assert.equal(teams.adminOnly, true);
 });
 

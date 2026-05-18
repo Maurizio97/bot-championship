@@ -8,8 +8,8 @@ INSERT INTO teams (name, owner_discord_id, budget)
 VALUES ('Milan', 'encke_', 700);
 
 -- Player seed (price espresso in unita)
-INSERT INTO players (player_name, overall, potential_overall, role, price)
-VALUES ('Rafael Leao', 86, 89, 'LW', 85);
+INSERT INTO players (player_name, overall, role, price)
+VALUES ('Rafael Leao', 86, 'LW', 85);
 
 -- Trasferimento manuale: assegna player id 1 al team id 1
 UPDATE players

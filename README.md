@@ -90,6 +90,7 @@ Nota: nel progetto `discord_id` viene usato come chiave testuale (username Disco
 - `&removeadmin <@utente>`
 - `&assignplayer <nomeGiocatore|playerId> <teamId>`
 - `&updateteam <teamId> <nuovoNomeSquadra> <@owner>`
+- `&teams`
 - `&continueteams`, `&closeteams`
 - `&iniziodraft`, `&pausadraft`, `&continua`, `&chiudidraft`
 - `&turno`, `&ordine`

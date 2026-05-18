@@ -51,6 +51,10 @@ async function listTeamRosters() {
   return teamRepository.findAllWithPlayers();
 }
 
+async function listTeams() {
+  return teamRepository.findAllOrdered();
+}
+
 async function getTeamByOwnerCandidates(candidates) {
   const team = await teamRepository.findByOwnerDiscordCandidates(candidates);
   if (!team) {
@@ -100,6 +104,7 @@ module.exports = {
   createTeam,
   getTeamById,
   updateTeamDetails,
+  listTeams,
   listTeamRosters,
   getTeamByOwnerCandidates,
   getRosterByTeamName

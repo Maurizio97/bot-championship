@@ -18,6 +18,7 @@ const pausadraft = require('./pausadraft');
 const rosa = require('./rosa');
 const scegli = require('./scegli');
 const assegna = require('./assegna');
+const teams = require('./teams');
 const togli = require('./togli');
 const turno = require('./turno');
 const updateteam = require('./updateteam');
@@ -60,6 +61,7 @@ for (const command of [
   rosa,
   scegli,
   assegna,
+  teams,
   togli,
   turno,
   updateteam,
