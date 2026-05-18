@@ -91,11 +91,12 @@ Nota: nel progetto `discord_id` viene usato come chiave testuale (username Disco
 - `&assignplayer <nomeGiocatore|playerId> <teamId>`
 - `&updateteam <teamId> <nuovoNomeSquadra> <@owner>`
 - `&continueteams`, `&closeteams`
-- `&iniziodraft`, `&continua`, `&chiudidraft`
+- `&iniziodraft`, `&pausadraft`, `&continua`, `&chiudidraft`
 - `&turno`, `&ordine`
-- `&aggiungi <teamName> <amount> <reason>`, `&togli <teamName> <amount> <reason>`
+- `&scegli <nomeGiocatore|playerId>`, `&assegna <nomeGiocatore|playerId>`
+- `&aggiungi <nomeSquadra|@owner> <amount> <reason>`, `&togli <nomeSquadra|@owner> <amount> <reason>`
 - `&aprimercato`, `&chiudimercato`
-- `&rosa [nomeSquadra]`, `&budget [nomeSquadra]`, `&valore <nomeGiocatore|playerId>`, `&chi <nomeGiocatore|playerId>`
+- `&rosa [nomeSquadra|@owner]`, `&budget [nomeSquadra|@owner]`, `&valore <nomeGiocatore|playerId>`, `&chi <nomeGiocatore|playerId>`
 - `&comandi`
 
 I comandi admin (`&addteam`, `&assignplayer`, `&updateteam`) richiedono che l'autore del messaggio sia presente nella tabella `admins`.

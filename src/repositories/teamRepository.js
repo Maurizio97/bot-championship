@@ -21,7 +21,7 @@ async function findByOwnerDiscordId(ownerDiscordId) {
   return Team.findOne({ where: { owner_discord_id: ownerDiscordId } });
 }
 
-async function findByOwnerDiscordCandidates(candidates) {
+async function findByOwnerDiscordCandidates(candidates, options = {}) {
   const normalizedCandidates = (Array.isArray(candidates) ? candidates : [])
     .map((item) => String(item || '').trim())
     .filter(Boolean);
@@ -35,7 +35,8 @@ async function findByOwnerDiscordCandidates(candidates) {
       owner_discord_id: {
         [Op.in]: normalizedCandidates
       }
-    }
+    },
+    ...options
   });
 }
 
@@ -56,35 +57,17 @@ async function findByNameInsensitive(name, options = {}) {
 }
 
 async function findByNameOrOwnerCandidates(nameOrIdentifier, ownerCandidates = [], options = {}) {
-  const normalizedName = String(nameOrIdentifier || '').trim().toLowerCase();
-  const normalizedCandidates = (Array.isArray(ownerCandidates) ? ownerCandidates : [])
-    .map((item) => String(item || '').trim())
-    .filter(Boolean);
-
-  const orConditions = [];
-
-  if (normalizedName) {
-    orConditions.push(where(fn('LOWER', col('name')), { [Op.eq]: normalizedName }));
-  }
-
-  if (normalizedCandidates.length > 0) {
-    orConditions.push({
-      owner_discord_id: {
-        [Op.in]: normalizedCandidates
-      }
-    });
-  }
-
-  if (orConditions.length === 0) {
+  const normalizedName = String(nameOrIdentifier || '').trim();
+  if (!normalizedName) {
     return null;
   }
 
-  return Team.findOne({
-    where: {
-      [Op.or]: orConditions
-    },
-    ...options
-  });
+  const byName = await findByNameInsensitive(normalizedName, options);
+  if (byName) {
+    return byName;
+  }
+
+  return findByOwnerDiscordCandidates(ownerCandidates, options);
 }
 
 async function createTeam(data) {
