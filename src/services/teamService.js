@@ -1,6 +1,7 @@
 const teamRepository = require('../repositories/teamRepository');
 const { DEFAULT_TEAM_BUDGET } = require('../config/constants');
 const { BadRequestError, ConflictError, NotFoundError } = require('../utils/errors');
+const { formatDiscordIdentity } = require('../utils/discordIdentity');
 
 async function createTeam({ name, ownerDiscordId, budget = DEFAULT_TEAM_BUDGET }) {
   if (!name || !ownerDiscordId) {
@@ -10,6 +11,11 @@ async function createTeam({ name, ownerDiscordId, budget = DEFAULT_TEAM_BUDGET }
   const existing = await teamRepository.findByName(name);
   if (existing) {
     throw new ConflictError(`La squadra ${name} esiste gia.`);
+  }
+
+  const existingByOwner = await teamRepository.findByOwnerDiscordId(ownerDiscordId);
+  if (existingByOwner) {
+    throw new ConflictError(`L'owner ${formatDiscordIdentity(ownerDiscordId)} ha gia una squadra registrata.`);
   }
 
   return teamRepository.createTeam({
@@ -36,9 +42,14 @@ async function updateTeamDetails({ teamId, newName, ownerDiscordId }) {
 
   const team = await getTeamById(teamId);
   const existingByName = await teamRepository.findByName(newName);
+  const existingByOwner = await teamRepository.findByOwnerDiscordId(ownerDiscordId);
 
   if (existingByName && existingByName.id !== team.id) {
     throw new ConflictError(`La squadra ${newName} esiste gia.`);
+  }
+
+  if (existingByOwner && existingByOwner.id !== team.id) {
+    throw new ConflictError(`L'owner ${formatDiscordIdentity(ownerDiscordId)} ha gia una squadra registrata.`);
   }
 
   team.name = newName;

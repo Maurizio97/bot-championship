@@ -1,5 +1,5 @@
-const { Op, fn, col, where } = require('sequelize');
 const { Player, Team } = require('../models');
+const { normalizeSearchText } = require('../utils/textSearch');
 
 async function findById(id) {
   return Player.findByPk(id);
@@ -12,13 +12,8 @@ async function findByIdForUpdate(id, transaction) {
   });
 }
 
-async function findByName(term, limit = 10) {
-  const normalized = String(term || '').trim().toLowerCase();
-
-  return Player.findAll({
-    where: where(fn('LOWER', col('player_name')), {
-      [Op.like]: `%${normalized}%`
-    }),
+function buildPlayerListQuery() {
+  return {
     include: [
       {
         model: Team,
@@ -29,9 +24,20 @@ async function findByName(term, limit = 10) {
     order: [
       ['player_name', 'ASC'],
       ['overall', 'DESC']
-    ],
-    limit
-  });
+    ]
+  };
+}
+
+async function findByName(term, limit = 10) {
+  const normalized = normalizeSearchText(term);
+  if (!normalized) {
+    return [];
+  }
+
+  const players = await Player.findAll(buildPlayerListQuery());
+  return players
+    .filter((player) => normalizeSearchText(player.player_name).includes(normalized))
+    .slice(0, limit);
 }
 
 async function save(player, options = {}) {
@@ -39,20 +45,13 @@ async function save(player, options = {}) {
 }
 
 async function findByExactName(term) {
-  const normalized = String(term || '').trim().toLowerCase();
+  const normalized = normalizeSearchText(term);
+  if (!normalized) {
+    return null;
+  }
 
-  return Player.findOne({
-    where: where(fn('LOWER', col('player_name')), {
-      [Op.eq]: normalized
-    }),
-    include: [
-      {
-        model: Team,
-        as: 'team',
-        required: false
-      }
-    ]
-  });
+  const players = await Player.findAll(buildPlayerListQuery());
+  return players.find((player) => normalizeSearchText(player.player_name) === normalized) || null;
 }
 
 module.exports = {

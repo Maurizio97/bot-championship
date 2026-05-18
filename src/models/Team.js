@@ -23,6 +23,7 @@ Team.init(
     owner_discord_id: {
       type: DataTypes.STRING(64),
       allowNull: false,
+      unique: true,
       validate: {
         notEmpty: true
       }
