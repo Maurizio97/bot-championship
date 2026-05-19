@@ -109,7 +109,7 @@ Nota: per selezionare un utente nei comandi admin/team owner, la mention Discord
 ## Schema database
 
 - SQL completo: `database/schema.sql`
-- Migrazione incrementale: `database/migrations/001_admin_teamselection_draft.sql`
+- Migrazioni incrementali: `database/migrations/001_admin_teamselection_draft.sql`, `database/migrations/002_unique_team_owner.sql`, `database/migrations/003_drop_transfer_created_by_admin.sql`
 - Query esempio e seed: `database/example-queries.sql`
 - Seed 10 giocatori: `database/seed-players.sql`
 
@@ -134,7 +134,6 @@ Nota UI: quando un comando restituisce una squadra, l'output mostra sempre anche
 - `teams` 1:N `players`
 - `players` 1:N `transfers`
 - `teams` 1:N `transfers` (sia `from_team_id` sia `to_team_id`)
-- `admins` 1:N `transfers`
 - `players` 1:N `overall_history`
 - `admins` 1:N `overall_history`
 

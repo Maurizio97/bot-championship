@@ -11,7 +11,7 @@ module.exports = {
   category: 'Gestione Giocatori',
   adminOnly: true,
   async execute(message, args) {
-    const admin = await ensureAdminByMessage(message);
+    await ensureAdminByMessage(message);
 
     if (args.length < 2) {
       throw new Error(`Uso corretto: ${this.usage}`);
@@ -26,8 +26,7 @@ module.exports = {
 
     const result = await playerService.assignPlayerToTeam({
       playerIdentifier,
-      toTeamId: teamId,
-      adminId: admin.id
+      toTeamId: teamId
     });
 
     const oldTeamLabel = result.fromTeamId ? (await teamService.getTeamById(result.fromTeamId)).name : 'Nessuna';

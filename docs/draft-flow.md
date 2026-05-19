@@ -40,7 +40,7 @@ BEGIN TRANSACTION
   player.team_id = team.id
   team.budget -= player.price
 
-  insert transfer(from_team_id=null, to_team_id=team.id, price, created_by_admin_id=null)
+  insert transfer(from_team_id=null, to_team_id=team.id, price)
   insert budget_logs(type=DRAFT_PURCHASE, amount=-price, reason="Draft round X")
 
   state.current_draft_turn += 1

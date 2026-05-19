@@ -16,8 +16,8 @@ UPDATE players
 SET team_id = 1, updated_at = CURRENT_TIMESTAMP
 WHERE id = 1;
 
-INSERT INTO transfers (player_id, from_team_id, to_team_id, price, created_by_admin_id)
-VALUES (1, NULL, 1, 85, 1);
+INSERT INTO transfers (player_id, from_team_id, to_team_id, price)
+VALUES (1, NULL, 1, 85);
 
 -- Evoluzione overall
 UPDATE players

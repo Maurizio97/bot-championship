@@ -48,7 +48,7 @@ async function findPlayerByIdentifierOrSuggest(playerIdentifier) {
   return player;
 }
 
-async function assignPlayerToTeam({ playerIdentifier, toTeamId, adminId }) {
+async function assignPlayerToTeam({ playerIdentifier, toTeamId }) {
   if (!Number.isInteger(toTeamId)) {
     throw new BadRequestError('teamId deve essere un numero intero.');
   }
@@ -71,8 +71,7 @@ async function assignPlayerToTeam({ playerIdentifier, toTeamId, adminId }) {
         player_id: player.id,
         from_team_id: fromTeamId,
         to_team_id: toTeam.id,
-        price: player.price,
-        created_by_admin_id: adminId
+        price: player.price
       },
       { transaction }
     );

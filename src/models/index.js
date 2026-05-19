@@ -19,9 +19,6 @@ Team.hasMany(Transfer, { foreignKey: 'to_team_id', as: 'incomingTransfers' });
 Transfer.belongsTo(Team, { foreignKey: 'from_team_id', as: 'fromTeam' });
 Transfer.belongsTo(Team, { foreignKey: 'to_team_id', as: 'toTeam' });
 
-Admin.hasMany(Transfer, { foreignKey: 'created_by_admin_id', as: 'transfersCreated' });
-Transfer.belongsTo(Admin, { foreignKey: 'created_by_admin_id', as: 'createdByAdmin' });
-
 Team.hasMany(DraftOrder, { foreignKey: 'team_id', as: 'draftOrders' });
 DraftOrder.belongsTo(Team, { foreignKey: 'team_id', as: 'team' });
 

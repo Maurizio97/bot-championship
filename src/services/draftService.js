@@ -149,8 +149,7 @@ async function executeDraftPick({ transaction, state, order, playerIdentifier, t
       player_id: playerLocked.id,
       from_team_id: null,
       to_team_id: team.id,
-      price: playerLocked.price,
-      created_by_admin_id: adminId
+      price: playerLocked.price
     },
     { transaction }
   );

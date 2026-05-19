@@ -5,8 +5,18 @@ BEGIN
   EXECUTE 'ALTER TABLE teams DROP COLUMN IF EXISTS ' || quote_ident('selected' || '_' || 'club' || '_' || 'name');
 END $$;
 
-ALTER TABLE transfers
-  ALTER COLUMN created_by_admin_id DROP NOT NULL;
+DO $$
+BEGIN
+  IF EXISTS (
+    SELECT 1
+    FROM information_schema.columns
+    WHERE table_name = 'transfers'
+      AND column_name = 'created_by_admin_id'
+  ) THEN
+    ALTER TABLE transfers
+      ALTER COLUMN created_by_admin_id DROP NOT NULL;
+  END IF;
+END $$;
 
 CREATE TABLE IF NOT EXISTS league_state (
   id INTEGER PRIMARY KEY,

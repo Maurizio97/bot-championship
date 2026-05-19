@@ -40,14 +40,6 @@ Transfer.init(
       validate: {
         min: 0
       }
-    },
-    created_by_admin_id: {
-      type: DataTypes.INTEGER,
-      allowNull: true,
-      references: {
-        model: 'admins',
-        key: 'id'
-      }
     }
   },
   {
