@@ -24,6 +24,7 @@ const turno = require('./turno');
 const updateteam = require('./updateteam');
 const valore = require('./valore');
 const aprimercato = require('./aprimercato');
+const saltaturno = require('./saltaturno');
 
 const commands = new Map();
 
@@ -66,7 +67,8 @@ for (const command of [
   turno,
   updateteam,
   valore,
-  aprimercato
+  aprimercato,
+  saltaturno
 ]) {
   command.usage = normalizeUsage(command.usage);
   commands.set(command.name, command);

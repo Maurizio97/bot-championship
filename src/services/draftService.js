@@ -101,7 +101,10 @@ async function skipTurn() {
   return sequelize.transaction(async (transaction) => {
     const state = await leagueStateRepository.getForUpdate(transaction);
     if (state.draft_status !== 'ACTIVE') {
-      throw new ConflictError('Draft non attivo.');
+      const hint = state.draft_status === 'PAUSED'
+        ? `Il draft e in pausa. Usa ${env.prefix}continua per riprendere.`
+        : `Il draft non e stato avviato. Usa ${env.prefix}iniziodraft.`;
+      throw new ConflictError(hint);
     }
 
     const order = await getDraftOrder({ transaction });
@@ -109,13 +112,19 @@ async function skipTurn() {
       throw new NotFoundError(`Ordine draft non trovato. Avvia prima ${env.prefix}iniziodraft.`);
     }
 
-    await stateManagerService.advanceDraftTurn({
+    const { isNewRound: skipIsNewRound } = await stateManagerService.advanceDraftTurn({
       transaction,
       orderLength: order.length
     });
 
+    if (skipIsNewRound) {
+      await draftOrderRepository.reorderPlayerDraftByBudget(transaction);
+      // eslint-disable-next-line no-console
+      console.log('[DRAFT] skip: nuovo round, ordine ricalcolato per budget DESC');
+    }
+
     return {
-      order,
+      order: await getDraftOrder({ transaction }),
       state: await leagueStateRepository.getForUpdate(transaction)
     };
   });
@@ -165,13 +174,20 @@ async function executeDraftPick({ transaction, state, order, playerIdentifier, t
     { transaction }
   );
 
-  await stateManagerService.advanceDraftTurn({
+  const { isNewRound } = await stateManagerService.advanceDraftTurn({
     transaction,
     orderLength: order.length
   });
 
+  if (isNewRound) {
+    await draftOrderRepository.reorderPlayerDraftByBudget(transaction);
+    // eslint-disable-next-line no-console
+    console.log('[DRAFT] nuovo round: ordine ricalcolato per budget DESC');
+  }
+
   const refreshedState = await leagueStateRepository.getForUpdate(transaction);
-  const nextEntry = order[refreshedState.current_draft_turn] || null;
+  const freshOrder = isNewRound ? await getDraftOrder({ transaction }) : order;
+  const nextEntry = freshOrder[refreshedState.current_draft_turn] || null;
 
   return {
     player: playerLocked,
@@ -188,7 +204,10 @@ async function pickPlayer({ discordUserId, discordUserCandidates = [], playerIde
   return sequelize.transaction(async (transaction) => {
     const state = await leagueStateRepository.getForUpdate(transaction);
     if (state.draft_status !== 'ACTIVE') {
-      throw new ConflictError('Draft non attivo.');
+      const hint = state.draft_status === 'PAUSED'
+        ? `Il draft e in pausa. Usa ${env.prefix}continua per riprendere.`
+        : `Il draft non e stato avviato. Usa ${env.prefix}iniziodraft.`;
+      throw new ConflictError(hint);
     }
 
     const order = await getDraftOrder({ transaction });
@@ -229,7 +248,10 @@ async function staffPickPlayer({ playerIdentifier, adminId }) {
   return sequelize.transaction(async (transaction) => {
     const state = await leagueStateRepository.getForUpdate(transaction);
     if (state.draft_status !== 'ACTIVE') {
-      throw new ConflictError('Draft non attivo.');
+      const hint = state.draft_status === 'PAUSED'
+        ? `Il draft e in pausa. Usa ${env.prefix}continua per riprendere.`
+        : `Il draft non e stato avviato. Usa ${env.prefix}iniziodraft.`;
+      throw new ConflictError(hint);
     }
 
     const order = await getDraftOrder({ transaction });

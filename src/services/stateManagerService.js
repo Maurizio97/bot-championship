@@ -24,11 +24,13 @@ async function advanceDraftTurn({ transaction, orderLength }) {
     orderLength
   });
 
+  const isNewRound = nextRound > state.current_round;
+
   state.current_draft_turn = nextTurn;
   state.current_round = nextRound;
 
   await state.save({ transaction });
-  return state;
+  return { state, isNewRound };
 }
 
 async function pauseDraft() {
