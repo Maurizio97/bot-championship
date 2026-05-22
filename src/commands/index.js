@@ -9,6 +9,8 @@ const chiudimercato = require('./chiudimercato');
 const comandi = require('./comandi');
 const comandistaff = require('./comandistaff');
 const continua = require('./continua');
+const giocatoriiberi = require('./giocatoriiberi');
+const giocatoripresi = require('./giocatoripresi');
 const iniziodraft = require('./iniziodraft');
 const ordine = require('./ordine');
 const pausadraft = require('./pausadraft');
@@ -50,6 +52,8 @@ for (const command of [
   comandi,
   comandistaff,
   continua,
+  giocatoriiberi,
+  giocatoripresi,
   iniziodraft,
   ordine,
   pausadraft,
@@ -69,4 +73,3 @@ for (const command of [
 }
 
 module.exports = commands;
-

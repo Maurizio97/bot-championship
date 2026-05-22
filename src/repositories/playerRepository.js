@@ -1,3 +1,4 @@
+const { Op, fn, col, where: sequelizeWhere } = require('sequelize');
 const { Player, Team } = require('../models');
 const { normalizeSearchText } = require('../utils/textSearch');
 
@@ -54,11 +55,84 @@ async function findByExactName(term) {
   return players.find((player) => normalizeSearchText(player.player_name) === normalized) || null;
 }
 
+async function findFreePlayers(options = {}) {
+  const { role, limit = 20, offset = 0 } = options;
+
+  const queryWhere = { team_id: null };
+  if (role) {
+    const normalizedRole = String(role).trim().toLowerCase();
+    queryWhere[Op.and] = [
+      sequelizeWhere(fn('LOWER', col('role')), {
+        [Op.like]: `${normalizedRole}%`
+      })
+    ];
+  }
+
+  const { count, rows } = await Player.findAndCountAll({
+    where: queryWhere,
+    include: [
+      {
+        model: Team,
+        as: 'team',
+        required: false
+      }
+    ],
+    order: [['overall', 'DESC']],
+    limit,
+    offset
+  });
+
+  return {
+    players: rows,
+    total: count,
+    limit,
+    offset,
+    pages: Math.ceil(count / limit)
+  };
+}
+
+async function findTakenPlayers(options = {}) {
+  const { role, limit = 20, offset = 0 } = options;
+
+  const queryWhere = { team_id: { [Op.ne]: null } };
+  if (role) {
+    const normalizedRole = String(role).trim().toLowerCase();
+    queryWhere[Op.and] = [
+      sequelizeWhere(fn('LOWER', col('role')), {
+        [Op.like]: `${normalizedRole}%`
+      })
+    ];
+  }
+
+  const { count, rows } = await Player.findAndCountAll({
+    where: queryWhere,
+    include: [
+      {
+        model: Team,
+        as: 'team',
+        required: false
+      }
+    ],
+    order: [['overall', 'DESC']],
+    limit,
+    offset
+  });
+
+  return {
+    players: rows,
+    total: count,
+    limit,
+    offset,
+    pages: Math.ceil(count / limit)
+  };
+}
+
 module.exports = {
   findById,
   findByIdForUpdate,
   findByName,
   findByExactName,
-  save
+  save,
+  findFreePlayers,
+  findTakenPlayers
 };
-

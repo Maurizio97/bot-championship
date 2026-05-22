@@ -43,3 +43,38 @@ test('findByExactName trova match esatto ignorando accenti', async () => {
   }
 });
 
+test('findFreePlayers applica filtro role case-insensitive con prefisso', async () => {
+  const originalFindAndCountAll = Player.findAndCountAll;
+
+  Player.findAndCountAll = async (options) => {
+    assert.equal(options.limit, 20);
+    assert.equal(options.offset, 0);
+    assert.equal(options.where.team_id, null);
+    assert.ok(options.where, 'La query deve includere where');
+    return { count: 0, rows: [] };
+  };
+
+  try {
+    await playerRepository.findFreePlayers({ role: 'AtT', limit: 20, offset: 0 });
+  } finally {
+    Player.findAndCountAll = originalFindAndCountAll;
+  }
+});
+
+test('findTakenPlayers applica filtro role case-insensitive con prefisso', async () => {
+  const originalFindAndCountAll = Player.findAndCountAll;
+
+  Player.findAndCountAll = async (options) => {
+    assert.equal(options.limit, 10);
+    assert.equal(options.offset, 20);
+    assert.ok(options.where.team_id, 'La query deve filtrare solo giocatori assegnati');
+    return { count: 0, rows: [] };
+  };
+
+  try {
+    await playerRepository.findTakenPlayers({ role: 'PoR', limit: 10, offset: 20 });
+  } finally {
+    Player.findAndCountAll = originalFindAndCountAll;
+  }
+});
+
