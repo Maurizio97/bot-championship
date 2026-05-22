@@ -3,6 +3,9 @@ const env = require('../config/env');
 const { errorEmbed } = require('../utils/embedFactory');
 const { hasDiscordAdminRole } = require('../utils/discordRoleGuard');
 
+const DRAFT_RESTRICTED_CHANNEL_ID = '1369075843288268820';
+const DRAFT_ALLOWED_COMMANDS_FOR_NON_ADMIN = new Set(['scegli']);
+
 module.exports = {
   name: 'messageCreate',
   async execute(message) {
@@ -24,9 +27,27 @@ module.exports = {
 
     if (!command) return;
 
-    console.log(command.adminOnly);
+    const isAdmin = hasDiscordAdminRole(message);
+
+    if (
+      message.channel?.id === DRAFT_RESTRICTED_CHANNEL_ID &&
+      !isAdmin &&
+      !DRAFT_ALLOWED_COMMANDS_FOR_NON_ADMIN.has(command.name)
+    ) {
+      const allowedCommands = [...DRAFT_ALLOWED_COMMANDS_FOR_NON_ADMIN]
+        .map((commandItem) => `${env.prefix}${commandItem}`)
+        .join(', ');
+
+      const embed = errorEmbed(
+        'Comando non consentito in questo canale',
+        `In questo canale puoi usare solo: ${allowedCommands}`
+      );
+      await message.reply({ embeds: [embed] });
+      return;
+    }
+
     // Check: comando admin-only richiede ruolo Discord
-    if (command.adminOnly && !hasDiscordAdminRole(message)) {
+    if (command.adminOnly && !isAdmin) {
       const embed = errorEmbed(
         'Accesso negato',
         '🔐 Questo comando richiede il ruolo admin Discord.'
