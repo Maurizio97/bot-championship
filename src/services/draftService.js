@@ -181,8 +181,7 @@ async function executeDraftPick({ transaction, state, order, playerIdentifier, t
       team_id: team.id,
       amount: -Number(playerLocked.price),
       type: 'DRAFT_PURCHASE',
-      reason: `Draft round ${state.current_round}`,
-      created_by_admin_id: adminId
+      reason: `Draft round ${state.current_round}`
     },
     { transaction }
   );

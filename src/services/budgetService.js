@@ -54,8 +54,7 @@ async function addBudget({ teamName, amount, reason, adminId }) {
         team_id: lockedTeam.id,
         amount: parsedAmount,
         type: 'ADD',
-        reason: normalizedReason,
-        created_by_admin_id: adminId || null
+        reason: normalizedReason
       },
       { transaction }
     );
@@ -88,8 +87,7 @@ async function removeBudget({ teamName, amount, reason, adminId }) {
         team_id: lockedTeam.id,
         amount: -parsedAmount,
         type: 'REMOVE',
-        reason: normalizedReason,
-        created_by_admin_id: adminId || null
+        reason: normalizedReason
       },
       { transaction }
     );
