@@ -6,6 +6,7 @@ const env = {
   nodeEnv: process.env.NODE_ENV || 'development',
   discordToken: process.env.DISCORD_TOKEN,
   prefix: process.env.DISCORD_PREFIX || '!',
+  discordAdminRoleId: process.env.DISCORD_ADMIN_ROLE_ID,
   db: {
     dialect: process.env.DB_DIALECT || 'postgres',
     host: process.env.DB_HOST || 'localhost',

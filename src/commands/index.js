@@ -1,8 +1,5 @@
 const env = require('../config/env');
 const addteam = require('./addteam');
-const addadmin = require('./addadmin');
-const admins = require('./admins');
-const removeadmin = require('./removeadmin');
 const assignplayer = require('./assignplayer');
 const aggiungi = require('./aggiungi');
 const budget = require('./budget');
@@ -44,9 +41,6 @@ function normalizeUsage(usage) {
 
 for (const command of [
   addteam,
-  addadmin,
-  admins,
-  removeadmin,
   assignplayer,
   aggiungi,
   budget,

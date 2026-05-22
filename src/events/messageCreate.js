@@ -1,6 +1,7 @@
 const commands = require('../commands');
 const env = require('../config/env');
 const { errorEmbed } = require('../utils/embedFactory');
+const { hasDiscordAdminRole } = require('../utils/discordRoleGuard');
 
 module.exports = {
   name: 'messageCreate',
@@ -22,6 +23,17 @@ module.exports = {
     }
 
     if (!command) return;
+
+    console.log(command.adminOnly);
+    // Check: comando admin-only richiede ruolo Discord
+    if (command.adminOnly && !hasDiscordAdminRole(message)) {
+      const embed = errorEmbed(
+        'Accesso negato',
+        '🔐 Questo comando richiede il ruolo admin Discord.'
+      );
+      await message.reply({ embeds: [embed] });
+      return;
+    }
 
     try {
       await command.execute(message, args, { commands, prefix: env.prefix });

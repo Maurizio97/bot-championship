@@ -1,6 +1,6 @@
 # FC26 Discord Bot - Campionato Online
 
-Bot Discord modulare per gestire squadre, giocatori, budget, trasferimenti ed evoluzione overall con controllo admin via Discord ID.
+Bot Discord modulare per gestire squadre, giocatori, budget, trasferimenti ed evoluzione overall con controllo admin via ruolo Discord.
 
 ## Stack
 
@@ -28,11 +28,13 @@ src/
 
 1. Copia `.env.example` in `.env`
 2. Inserisci token Discord e config DB
-3. Installa dipendenze
-4. Avvia il bot
+3. **Imposta `DISCORD_ADMIN_ROLE_ID`** (ID ruolo o nome ruolo Discord)
+4. Installa dipendenze
+5. Avvia il bot
 
 ```bash
 npm install
+npm run db:bootstrap
 npm start
 ```
 
@@ -40,106 +42,126 @@ npm start
 
 Il bot gira in locale, mentre PostgreSQL gira in Docker tramite `docker-compose.yml`.
 
-1. Avvia il DB containerizzato
-2. Usa i valori di `.env.example` (sono gia allineati al container)
-3. Avvia il bot
+### Dev - Setup completo
 
 ```bash
+# Avvia DB
 npm run db:up
-npm start
+
+# Attendi ~2s, poi bootstrap schema
+npm run db:bootstrap
+
+# (Opzionale) Carica 10 giocatori per test
+npm run db:seed:players
+
+# Avvia bot in watch mode
+npm run dev
 ```
 
-Per vedere i log DB:
+### Dev - Reset completo
+
+```bash
+npm run db:down
+npm run db:up
+npm run db:bootstrap
+npm run dev
+```
+
+Log DB:
 
 ```bash
 npm run db:logs
 ```
 
-Per fermare il DB:
+Ferma DB:
 
 ```bash
 npm run db:down
 ```
 
-Bootstrap iniziale schema + seed admin (opzionale):
+## Amministrazione
 
-```bash
-npm run db:bootstrap
-npm run db:bootstrap -- encke_
+### Gestione Admin (v2)
+
+Niente tab tabella `admins`. **Tutto via ruolo Discord:**
+
+1. Crea un ruolo nel server Discord (es. "Moderator")
+2. Assegna il ruolo ai moderatori
+3. Configura nel `.env`:
+
+```env
+DISCORD_ADMIN_ROLE_ID=1507438255329771720
 ```
 
-Seed 10 giocatori per test:
+O con nome ruolo (case-insensitive):
 
-```bash
-npm run db:seed:players
+```env
+DISCORD_ADMIN_ROLE_ID=Moderator
 ```
 
-Nota: nel progetto `discord_id` viene usato come chiave testuale (username Discord).
+Fatto. Comandi `adminOnly: true` sono bloccati per utenti senza ruolo.
 
 ## Valuta interna
 
-- La valuta e gestita a unita semplici
-- Budget iniziale squadra: `700`
-- Prezzo giocatori e trasferimenti usano la stessa scala a unita
+- Budget iniziale squadra: `700` unità
+- Prezzo giocatori e trasferimenti: scala unità semplice
 
 ## Comandi implementati
 
-- `&addteam <nomeSquadra> <@owner>`
-- `&admins`
-- `&addadmin <@utente> <role>`
-- `&removeadmin <@utente>`
-- `&assignplayer <nomeGiocatore|playerId> <teamId>`
-- `&updateteam <teamId> <nuovoNomeSquadra> <@owner>`
-- `&teams`
-- `&continueteams`, `&closeteams`
-- `&iniziodraft`, `&pausadraft`, `&continua`, `&chiudidraft`
-- `&turno`, `&ordine`
-- `&scegli <nomeGiocatore|playerId>`, `&assegna <nomeGiocatore|playerId>`
-- `&aggiungi <nomeSquadra|@owner> <amount> <reason>`, `&togli <nomeSquadra|@owner> <amount> <reason>`
-- `&aprimercato`, `&chiudimercato`
-- `&rosa [nomeSquadra|@owner]`, `&budget [nomeSquadra|@owner]`, `&valore <nomeGiocatore|playerId>`, `&chi <nomeGiocatore|playerId>`
-- `&comandi`
+### Pubblici (tutti)
 
-I comandi admin (`&addteam`, `&assignplayer`, `&updateteam`) richiedono che l'autore del messaggio sia presente nella tabella `admins`.
+- `!ordine` — Ordine draft attuale
+- `!turno` — Turno squadra corrente
+- `!budget [squadra|@owner]` — Budget squadra
+- `!chi <giocatore>` — Proprietario giocatore
+- `!rosa [squadra|@owner]` — Rosa squadra
+- `!valore <giocatore>` — Valore giocatore
+- `!comandi` — Elenco comandi
+- `!scegli <giocatore>` — Candidatura giocatore (team selection)
+- `!teams` — Elenco squadre (admin)
+- `!continueteams`, `!closeteams` — Team selection lifecycle
 
-Nota: per selezionare un utente nei comandi admin/team owner, la mention Discord (`@utente`) e obbligatoria.
+### Staff (Require ruolo Discord)
 
-`&assignplayer` cerca il giocatore per nome; se trova piu risultati, suggerisce i primi 10 match con relativo ID.
+- `!addteam <nome> <@owner>` — Crea squadra
+- `!updateteam <teamId> <nome> <@owner>` — Modifica squadra
+- `!assignplayer <giocatore> <teamId>` — Assegna giocatore
+- `!iniziodraft`, `!pausadraft`, `!continua`, `!chiudidraft` — Draft control
+- `!scegli`, `!assegna` — Draft + team selection actions
+- `!aggiungi <squadra> <amount> <reason>` — Accredita budget
+- `!togli <squadra> <amount> <reason>` — Addebita budget
+- `!aprimercato`, `!chiudimercato` — Market control
+- `!comandistaff` — Elenco comandi staff
+
+`&assignplayer` cerca il giocatore per nome; se trova più risultati, suggerisce i primi 10 match con relativo ID.
 
 ## Schema database
 
 - SQL completo: `database/schema.sql`
-- Migrazioni incrementali: `database/migrations/001_admin_teamselection_draft.sql`, `database/migrations/002_unique_team_owner.sql`, `database/migrations/003_drop_transfer_created_by_admin.sql`
-- Query esempio e seed: `database/example-queries.sql`
-- Seed 10 giocatori: `database/seed-players.sql`
+- Migrazioni incrementali: `database/migrations/`
+- Query esempio: `database/example-queries.sql`
+- Setup doc dettagliato: `docs/db-setup.md`
 
-## Nuove tabelle e persistenza stato
+## State persistence
 
-- `league_state`: singleton globale con stato draft/mercato/team selection, turno e round correnti
-- `draft_orders`: ordine persistente per `TEAM_SELECTION` e `PLAYER_DRAFT`
-- `budget_logs`: storico completo accrediti/addebiti/pick
-- `teams.name`: nome squadra/club registrato e scelto durante team selection
+- `league_state`: singleton globale (draft status, market status, turno, round)
+- `draft_orders`: ordine draft persistente
+- `budget_logs`: storico completo transazioni
+- `teams.name`: nome squadra scelto
 
-Nota UI: quando un comando restituisce una squadra, l'output mostra sempre anche il tag Discord dell'owner di fianco al nome.
-
-## Draft e restart bot
-
-- Ordine, round, turno e status sono persistiti in DB: restart non azzera i progressi.
-- `&continua` e `&continueteams` mantengono ordine e turno.
-- `&iniziodraft` rigenera un ordine random nuovo e resetta turno/round.
-- Pseudocodice e transaction examples: `docs/draft-flow.md`
+Restart bot NON resetta progress. Usa `!iniziodraft` per reset consapevole.
 
 ## Relazioni principali
 
 - `teams` 1:N `players`
 - `players` 1:N `transfers`
-- `teams` 1:N `transfers` (sia `from_team_id` sia `to_team_id`)
+- `teams` 1:N `transfers` (from/to)
 - `players` 1:N `overall_history`
-- `admins` 1:N `overall_history`
 
-## Note estendibilita
+## Estendibilità
 
-- Nuovi comandi: aggiungi file in `src/commands/` e registralo in `src/commands/index.js`
-- Nuove regole business: centralizzale in `src/services/`
-- Accesso DB isolato in `src/repositories/`
+- Nuovi comandi: `src/commands/` + registrare in `src/commands/index.js`
+- Business logic: `src/services/`
+- DB access: `src/repositories/`
+
 
