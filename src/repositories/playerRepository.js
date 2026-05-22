@@ -127,6 +127,13 @@ async function findTakenPlayers(options = {}) {
   };
 }
 
+async function countByTeamId(teamId, options = {}) {
+  return Player.count({
+    where: { team_id: teamId },
+    ...options
+  });
+}
+
 module.exports = {
   findById,
   findByIdForUpdate,
@@ -134,5 +141,6 @@ module.exports = {
   findByExactName,
   save,
   findFreePlayers,
-  findTakenPlayers
+  findTakenPlayers,
+  countByTeamId
 };

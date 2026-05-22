@@ -8,6 +8,7 @@ const budgetLogRepository = require('../repositories/budgetLogRepository');
 const stateManagerService = require('./stateManagerService');
 const playerService = require('./playerService');
 const env = require('../config/env');
+const { MIN_TEAM_PLAYERS, MIN_PLAYER_PRICE } = require('../config/constants');
 const { BadRequestError, ConflictError, ForbiddenError, NotFoundError } = require('../utils/errors');
 
 function shuffle(items) {
@@ -145,6 +146,18 @@ async function executeDraftPick({ transaction, state, order, playerIdentifier, t
 
   if (Number(team.budget) < Number(playerLocked.price)) {
     throw new ConflictError(`Budget insufficiente. Costo ${playerLocked.price}, disponibile ${team.budget}.`);
+  }
+
+  const currentRosterCount = await playerRepository.countByTeamId(team.id, { transaction });
+  const rosterCountAfterPick = currentRosterCount + 1;
+  const remainingSlotsToMinimum = Math.max(0, MIN_TEAM_PLAYERS - rosterCountAfterPick);
+  const remainingBudgetAfterPick = Number(team.budget) - Number(playerLocked.price);
+  const minimumBudgetNeededToCompleteRoster = remainingSlotsToMinimum * MIN_PLAYER_PRICE;
+
+  if (remainingBudgetAfterPick < minimumBudgetNeededToCompleteRoster) {
+    throw new ConflictError(
+      `Operazione non consentita: dopo questo acquisto resteresti con ${remainingBudgetAfterPick}, ma servono almeno ${minimumBudgetNeededToCompleteRoster} per completare una rosa minima di ${MIN_TEAM_PLAYERS} giocatori.`
+    );
   }
 
   playerLocked.team_id = team.id;
