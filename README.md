@@ -126,6 +126,8 @@ Fatto. Comandi `adminOnly: true` sono bloccati per utenti senza ruolo.
 - `!addteam <nome> <@owner>` — Crea squadra
 - `!updateteam <teamId> <nome> <@owner>` — Modifica squadra
 - `!assignplayer <giocatore> <teamId>` — Assegna giocatore
+- `!acquista <giocatore> <@owner>` — Acquista svincolato fuori draft (con controlli budget)
+- `!svincola <giocatore>` — Rimuove giocatore dalla squadra e rimborsa il costo
 - `!iniziodraft`, `!pausadraft`, `!continua`, `!chiudidraft` — Draft control
 - `!scegli`, `!assegna` — Draft + team selection actions
 - `!aggiungi <squadra> <amount> <reason>` — Accredita budget

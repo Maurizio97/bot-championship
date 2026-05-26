@@ -10,6 +10,8 @@ const valore = require('../src/commands/valore');
 const comandi = require('../src/commands/comandi');
 const scegli = require('../src/commands/scegli');
 const assegna = require('../src/commands/assegna');
+const acquista = require('../src/commands/acquista');
+const svincola = require('../src/commands/svincola');
 const teams = require('../src/commands/teams');
 
 const publicCommands = [
@@ -39,5 +41,13 @@ test('il comando assegna resta riservato allo staff', () => {
 
 test('il comando teams resta riservato allo staff', () => {
   assert.equal(teams.adminOnly, true);
+});
+
+test('il comando acquista resta riservato allo staff', () => {
+  assert.equal(acquista.adminOnly, true);
+});
+
+test('il comando svincola resta riservato allo staff', () => {
+  assert.equal(svincola.adminOnly, true);
 });
 

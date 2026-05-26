@@ -40,7 +40,7 @@ CREATE TABLE IF NOT EXISTS overall_history (
 );
 
 CREATE TABLE IF NOT EXISTS league_state (
-  id SERIAL PRIMARY KEY,
+  id INTEGER PRIMARY KEY,
   draft_status VARCHAR(16) NOT NULL DEFAULT 'CLOSED' CHECK (draft_status IN ('CLOSED', 'ACTIVE', 'PAUSED')),
   market_status VARCHAR(16) NOT NULL DEFAULT 'CLOSED' CHECK (market_status IN ('CLOSED', 'OPEN')),
   team_selection_status VARCHAR(16) NOT NULL DEFAULT 'CLOSED' CHECK (team_selection_status IN ('CLOSED', 'ACTIVE', 'PAUSED')),

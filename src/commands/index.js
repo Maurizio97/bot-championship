@@ -1,4 +1,5 @@
 const env = require('../config/env');
+const acquista = require('./acquista');
 const addteam = require('./addteam');
 const assignplayer = require('./assignplayer');
 const aggiungi = require('./aggiungi');
@@ -24,6 +25,7 @@ const updateteam = require('./updateteam');
 const valore = require('./valore');
 const aprimercato = require('./aprimercato');
 const saltaturno = require('./saltaturno');
+const svincola = require('./svincola');
 
 const commands = new Map();
 
@@ -42,6 +44,7 @@ function normalizeUsage(usage) {
 }
 
 for (const command of [
+  acquista,
   addteam,
   assignplayer,
   aggiungi,
@@ -66,7 +69,8 @@ for (const command of [
   updateteam,
   valore,
   aprimercato,
-  saltaturno
+  saltaturno,
+  svincola
 ]) {
   command.usage = normalizeUsage(command.usage);
   commands.set(command.name, command);

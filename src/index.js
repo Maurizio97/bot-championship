@@ -9,7 +9,7 @@ startHealthServer();
 
 process.on('unhandledRejection', console.error);
 async function bootstrap() {
-  await initDatabase();
+  // await initDatabase();
 
   const client = new Client({
     intents: [GatewayIntentBits.Guilds, GatewayIntentBits.GuildMessages, GatewayIntentBits.MessageContent]
