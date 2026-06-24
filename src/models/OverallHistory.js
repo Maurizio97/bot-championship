@@ -41,9 +41,64 @@ OverallHistory.init(
         notEmpty: true
       }
     },
-    updated_by_admin_id: {
+    season_number: {
+      type: DataTypes.INTEGER,
+      allowNull: true,
+      validate: {
+        min: 1
+      }
+    },
+    old_age: {
+      type: DataTypes.SMALLINT,
+      allowNull: true,
+      validate: {
+        min: 0
+      }
+    },
+    new_age: {
+      type: DataTypes.SMALLINT,
+      allowNull: true,
+      validate: {
+        min: 0
+      }
+    },
+    old_price: {
+      type: DataTypes.BIGINT,
+      allowNull: true,
+      validate: {
+        min: 0
+      }
+    },
+    new_price: {
+      type: DataTypes.BIGINT,
+      allowNull: true,
+      validate: {
+        min: 0
+      }
+    },
+    growth_applied: {
+      type: DataTypes.SMALLINT,
+      allowNull: true
+    },
+    goals: {
       type: DataTypes.INTEGER,
       allowNull: false,
+      defaultValue: 0,
+      validate: {
+        min: 0
+      }
+    },
+    assists: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      defaultValue: 0,
+      validate: {
+        min: 0
+      }
+    },
+    updated_by_admin_id: {
+      type: DataTypes.INTEGER,
+      allowNull: true,
       references: {
         model: 'admins',
         key: 'id'

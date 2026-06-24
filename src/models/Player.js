@@ -40,6 +40,13 @@ Player.init(
         min: 0
       }
     },
+    age: {
+      type: DataTypes.SMALLINT,
+      allowNull: true,
+      validate: {
+        min: 0
+      }
+    },
     team_id: {
       type: DataTypes.INTEGER,
       allowNull: true,

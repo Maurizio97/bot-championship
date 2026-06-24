@@ -13,6 +13,8 @@ const assegna = require('../src/commands/assegna');
 const acquista = require('../src/commands/acquista');
 const svincola = require('../src/commands/svincola');
 const teams = require('../src/commands/teams');
+const season = require('../src/commands/season');
+const storico = require('../src/commands/storico');
 
 const publicCommands = [
   ordine,
@@ -22,7 +24,8 @@ const publicCommands = [
   rosa,
   valore,
   comandi,
-  scegli
+  scegli,
+  storico
 ];
 
 test('i comandi informativi restano accessibili agli utenti normali', () => {
@@ -49,5 +52,9 @@ test('il comando acquista resta riservato allo staff', () => {
 
 test('il comando svincola resta riservato allo staff', () => {
   assert.equal(svincola.adminOnly, true);
+});
+
+test('il comando season resta riservato allo staff', () => {
+  assert.equal(season.adminOnly, true);
 });
 

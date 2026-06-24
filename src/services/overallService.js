@@ -36,7 +36,36 @@ async function updatePlayerOverall({ playerId, newOverall, reason, adminId }) {
   });
 }
 
+async function getPlayerOverallSummary(playerId) {
+  if (!Number.isInteger(playerId) || playerId <= 0) {
+    throw new BadRequestError('playerId deve essere un intero positivo.');
+  }
+
+  const player = await Player.findByPk(playerId);
+  if (!player) {
+    throw new NotFoundError(`Giocatore con ID ${playerId} non trovato.`);
+  }
+
+  const historyRows = await OverallHistory.findAll({
+    where: { player_id: player.id },
+    order: [['id', 'ASC']]
+  });
+
+  const initialOverall = historyRows.length > 0 ? Number(historyRows[0].old_overall) : Number(player.overall);
+  const currentOverall = Number(player.overall);
+
+  return {
+    player,
+    totalChanges: historyRows.length,
+    initialOverall,
+    currentOverall,
+    overallDelta: currentOverall - initialOverall,
+    currentValue: Number(player.price)
+  };
+}
+
 module.exports = {
-  updatePlayerOverall
+  updatePlayerOverall,
+  getPlayerOverallSummary
 };
 

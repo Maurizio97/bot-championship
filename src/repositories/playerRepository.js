@@ -6,6 +6,26 @@ async function findById(id) {
   return Player.findByPk(id);
 }
 
+async function findAll(options = {}) {
+  return Player.findAll(options);
+}
+
+async function findByIds(ids, options = {}) {
+  const uniqueIds = [...new Set((ids || []).filter((value) => Number.isInteger(value) && value > 0))];
+  if (uniqueIds.length === 0) {
+    return [];
+  }
+
+  return Player.findAll({
+    where: {
+      id: {
+        [Op.in]: uniqueIds
+      }
+    },
+    ...options
+  });
+}
+
 async function findByIdForUpdate(id, transaction) {
   return Player.findByPk(id, {
     transaction,
@@ -136,6 +156,8 @@ async function countByTeamId(teamId, options = {}) {
 
 module.exports = {
   findById,
+  findAll,
+  findByIds,
   findByIdForUpdate,
   findByName,
   findByExactName,

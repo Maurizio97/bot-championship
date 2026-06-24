@@ -16,6 +16,7 @@ module.exports = {
     const info = await playerService.getPlayerValueInfo(playerIdentifier);
 
     const embed = successEmbed('Valore giocatore', 'Dettaglio giocatore richiesto.', [
+      { name: 'ID', value: String(info.player.id), inline: true },
       { name: 'Giocatore', value: info.player.player_name, inline: true },
       { name: 'Ruolo', value: info.player.role, inline: true },
       { name: 'Overall', value: String(info.player.overall), inline: true },

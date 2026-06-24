@@ -26,6 +26,8 @@ const valore = require('./valore');
 const aprimercato = require('./aprimercato');
 const saltaturno = require('./saltaturno');
 const svincola = require('./svincola');
+const season = require('./season');
+const storico = require('./storico');
 
 const commands = new Map();
 
@@ -70,7 +72,9 @@ for (const command of [
   valore,
   aprimercato,
   saltaturno,
-  svincola
+  svincola,
+  season,
+  storico
 ]) {
   command.usage = normalizeUsage(command.usage);
   commands.set(command.name, command);

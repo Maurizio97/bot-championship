@@ -15,6 +15,7 @@ CREATE TABLE IF NOT EXISTS players (
   overall SMALLINT NOT NULL CHECK (overall BETWEEN 1 AND 99),
   role VARCHAR(40) NOT NULL,
   price BIGINT NOT NULL CHECK (price >= 0),
+  age SMALLINT NULL CHECK (age >= 0),
   team_id INTEGER NULL REFERENCES teams(id) ON DELETE SET NULL,
   created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
   updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
@@ -33,8 +34,17 @@ CREATE TABLE IF NOT EXISTS transfers (
 CREATE TABLE IF NOT EXISTS overall_history (
   id SERIAL PRIMARY KEY,
   player_id INTEGER NOT NULL REFERENCES players(id) ON DELETE CASCADE,
+  season_number INTEGER NULL CHECK (season_number >= 1),
   old_overall SMALLINT NOT NULL CHECK (old_overall BETWEEN 1 AND 99),
   new_overall SMALLINT NOT NULL CHECK (new_overall BETWEEN 1 AND 99),
+  old_age SMALLINT NULL CHECK (old_age >= 0),
+  new_age SMALLINT NULL CHECK (new_age >= 0),
+  old_price BIGINT NULL CHECK (old_price >= 0),
+  new_price BIGINT NULL CHECK (new_price >= 0),
+  growth_applied SMALLINT NULL,
+  goals INTEGER NOT NULL DEFAULT 0 CHECK (goals >= 0),
+  assists INTEGER NOT NULL DEFAULT 0 CHECK (assists >= 0),
+  updated_by_admin_id INTEGER NULL,
   reason VARCHAR(255) NOT NULL,
   created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
@@ -47,6 +57,7 @@ CREATE TABLE IF NOT EXISTS league_state (
   current_draft_turn INTEGER NOT NULL DEFAULT 0 CHECK (current_draft_turn >= 0),
   current_team_selection_turn INTEGER NOT NULL DEFAULT 0 CHECK (current_team_selection_turn >= 0),
   current_round INTEGER NOT NULL DEFAULT 1 CHECK (current_round >= 1),
+  current_season_number INTEGER NOT NULL DEFAULT 1 CHECK (current_season_number >= 1),
   created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
   updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
   CONSTRAINT league_state_singleton CHECK (id = 1)
@@ -79,6 +90,7 @@ CREATE TABLE IF NOT EXISTS budget_logs (
 CREATE INDEX IF NOT EXISTS idx_players_team_id ON players(team_id);
 CREATE INDEX IF NOT EXISTS idx_transfers_player_id ON transfers(player_id);
 CREATE INDEX IF NOT EXISTS idx_overall_history_player_id ON overall_history(player_id);
+CREATE INDEX IF NOT EXISTS idx_overall_history_season_number ON overall_history(season_number);
 CREATE INDEX IF NOT EXISTS idx_draft_orders_type ON draft_orders(type);
 CREATE INDEX IF NOT EXISTS idx_budget_logs_team_id ON budget_logs(team_id);
 

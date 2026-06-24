@@ -48,6 +48,14 @@ LeagueState.init(
       validate: {
         min: 1
       }
+    },
+    current_season_number: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      defaultValue: 1,
+      validate: {
+        min: 1
+      }
     }
   },
   {

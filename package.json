@@ -12,6 +12,7 @@
     "db:down": "docker compose down",
     "db:logs": "docker compose logs -f postgres",
     "db:bootstrap": "node scripts/db-bootstrap.js",
+    "db:migrate": "node scripts/db-migrate.js",
     "db:seed:players": "node scripts/db-seed-players.js"
   },
   "engines": {
