@@ -1,4 +1,6 @@
 const teamRepository = require('../repositories/teamRepository');
+const transferRepository = require('../repositories/transferRepository');
+const { sequelize } = require('../models');
 const { DEFAULT_TEAM_BUDGET } = require('../config/constants');
 const { BadRequestError, ConflictError, NotFoundError } = require('../utils/errors');
 const { formatDiscordIdentity } = require('../utils/discordIdentity');
@@ -58,6 +60,20 @@ async function updateTeamDetails({ teamId, newName, ownerDiscordId }) {
   return teamRepository.save(team);
 }
 
+async function deleteTeamById(teamId) {
+  return sequelize.transaction(async (transaction) => {
+    const team = await teamRepository.findByIdForUpdate(teamId, transaction);
+    if (!team) {
+      throw new NotFoundError(`Squadra con ID ${teamId} non trovata.`);
+    }
+
+    await transferRepository.deleteByTeamId(team.id, { transaction });
+    await teamRepository.destroy(team, { transaction });
+
+    return team;
+  });
+}
+
 async function listTeamRosters() {
   return teamRepository.findAllWithPlayers();
 }
@@ -115,9 +131,9 @@ module.exports = {
   createTeam,
   getTeamById,
   updateTeamDetails,
+  deleteTeamById,
   listTeams,
   listTeamRosters,
   getTeamByOwnerCandidates,
   getRosterByTeamName
 };
-

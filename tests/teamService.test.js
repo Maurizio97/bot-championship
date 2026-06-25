@@ -1,7 +1,9 @@
 const test = require('node:test');
 const assert = require('node:assert/strict');
 
+const { sequelize } = require('../src/models');
 const teamRepository = require('../src/repositories/teamRepository');
+const transferRepository = require('../src/repositories/transferRepository');
 const teamService = require('../src/services/teamService');
 
 test('createTeam rifiuta un owner gia associato a un team', async () => {
@@ -49,3 +51,55 @@ test('updateTeamDetails rifiuta un owner gia associato a un altro team', async (
   }
 });
 
+test('deleteTeamById elimina la squadra esistente', async () => {
+  const originalTransaction = sequelize.transaction;
+  const originalFindByIdForUpdate = teamRepository.findByIdForUpdate;
+  const originalDestroy = teamRepository.destroy;
+  const originalDeleteByTeamId = transferRepository.deleteByTeamId;
+
+  const existingTeam = { id: 7, name: 'Team Z', owner_discord_id: 'owner-z' };
+  let deletedTeam = null;
+  let deletedTransfersForTeamId = null;
+
+  sequelize.transaction = async (callback) => callback({ id: 'tx-delete-team' });
+  teamRepository.findByIdForUpdate = async () => existingTeam;
+  transferRepository.deleteByTeamId = async (teamId) => {
+    deletedTransfersForTeamId = teamId;
+  };
+  teamRepository.destroy = async (team) => {
+    deletedTeam = team;
+  };
+
+  try {
+    const removed = await teamService.deleteTeamById(7);
+    assert.equal(removed.id, 7);
+    assert.equal(deletedTransfersForTeamId, 7);
+    assert.equal(deletedTeam, existingTeam);
+  } finally {
+    sequelize.transaction = originalTransaction;
+    teamRepository.findByIdForUpdate = originalFindByIdForUpdate;
+    transferRepository.deleteByTeamId = originalDeleteByTeamId;
+    teamRepository.destroy = originalDestroy;
+  }
+});
+
+test('deleteTeamById rifiuta quando la squadra non esiste', async () => {
+  const originalTransaction = sequelize.transaction;
+  const originalFindByIdForUpdate = teamRepository.findByIdForUpdate;
+
+  sequelize.transaction = async (callback) => callback({ id: 'tx-delete-team' });
+  teamRepository.findByIdForUpdate = async () => null;
+
+  try {
+    await assert.rejects(
+      () => teamService.deleteTeamById(8),
+      (error) => {
+        assert.match(error.message, /Squadra con ID 8 non trovata\./i);
+        return true;
+      }
+    );
+  } finally {
+    sequelize.transaction = originalTransaction;
+    teamRepository.findByIdForUpdate = originalFindByIdForUpdate;
+  }
+});

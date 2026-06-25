@@ -78,6 +78,10 @@ async function save(team, options = {}) {
   return team.save(options);
 }
 
+async function destroy(team, options = {}) {
+  return team.destroy(options);
+}
+
 async function findAllWithPlayers() {
   return Team.findAll({
     include: [
@@ -105,6 +109,6 @@ module.exports = {
   findByNameOrOwnerCandidates,
   createTeam,
   save,
+  destroy,
   findAllWithPlayers
 };
-

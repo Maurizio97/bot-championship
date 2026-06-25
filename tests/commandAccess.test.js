@@ -15,6 +15,7 @@ const svincola = require('../src/commands/svincola');
 const teams = require('../src/commands/teams');
 const season = require('../src/commands/season');
 const storico = require('../src/commands/storico');
+const deleteteam = require('../src/commands/deleteteam');
 
 const publicCommands = [
   ordine,
@@ -58,3 +59,6 @@ test('il comando season resta riservato allo staff', () => {
   assert.equal(season.adminOnly, true);
 });
 
+test('il comando deleteteam resta riservato allo staff', () => {
+  assert.equal(deleteteam.adminOnly, true);
+});

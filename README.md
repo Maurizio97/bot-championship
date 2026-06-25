@@ -125,6 +125,7 @@ Fatto. Comandi `adminOnly: true` sono bloccati per utenti senza ruolo.
 
 - `!addteam <nome> <@owner>` — Crea squadra
 - `!updateteam <teamId> <nome> <@owner>` — Modifica squadra
+- `!deleteteam <teamId>` — Elimina squadra
 - `!assignplayer <giocatore> <teamId>` — Assegna giocatore
 - `!acquista <giocatore> <@owner>` — Acquista svincolato fuori draft (con controlli budget)
 - `!svincola <giocatore>` — Rimuove giocatore dalla squadra e rimborsa il costo
@@ -165,5 +166,4 @@ Restart bot NON resetta progress. Usa `!iniziodraft` per reset consapevole.
 - Nuovi comandi: `src/commands/` + registrare in `src/commands/index.js`
 - Business logic: `src/services/`
 - DB access: `src/repositories/`
-
 
