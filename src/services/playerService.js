@@ -4,6 +4,7 @@ const transferRepository = require('../repositories/transferRepository');
 const budgetLogRepository = require('../repositories/budgetLogRepository');
 const teamRepository = require('../repositories/teamRepository');
 const teamService = require('./teamService');
+const { calculateReleaseClause } = require('./playerValueService');
 const { MIN_TEAM_PLAYERS, MIN_PLAYER_PRICE } = require('../config/constants');
 const { BadRequestError, ConflictError, NotFoundError } = require('../utils/errors');
 
@@ -208,7 +209,8 @@ async function getPlayerValueInfo(playerIdentifier) {
   return {
     player,
     isAvailable: !player.team_id,
-    ownerTeam: team
+    ownerTeam: team,
+    releaseClause: calculateReleaseClause(player.price)
   };
 }
 
@@ -219,4 +221,3 @@ module.exports = {
   getPlayerValueInfo,
   releasePlayerFromTeam
 };
-

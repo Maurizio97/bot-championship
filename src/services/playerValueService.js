@@ -130,10 +130,40 @@ function calculatePlayerValue({ overall, age, role }) {
   return Math.max(1, Math.round(baseValue * ageMultiplier * roleMultiplier));
 }
 
+function calculateReleaseClause(playerValue) {
+  const normalizedValue = Number(playerValue);
+  if (!Number.isFinite(normalizedValue) || normalizedValue < 0) {
+    throw new BadRequestError('valore non valido per il calcolo clausola.');
+  }
+
+  return Math.round(normalizedValue * 1.25);
+}
+
+// function calculateReleaseClause(playerValue) {
+//   const normalizedValue = Number(playerValue);
+//   if (!Number.isFinite(normalizedValue) || normalizedValue < 0) {
+//     throw new BadRequestError('valore non valido per il calcolo clausola.');
+//   }
+//
+//   if (normalizedValue <= 20) {
+//     return Math.round(normalizedValue * 2.5);
+//   }
+//
+//   if (normalizedValue <= 50) {
+//     return Math.round(normalizedValue * 2.3);
+//   }
+//
+//   if (normalizedValue <= 100) {
+//     return Math.round(normalizedValue * 2.2);
+//   }
+//
+//   return Math.round(normalizedValue * 2.0);
+// }
+
 module.exports = {
   calculatePlayerValue,
+  calculateReleaseClause,
   getAgeMultiplier,
   getRoleMultiplier,
   getOverallBaseValue
 };
-

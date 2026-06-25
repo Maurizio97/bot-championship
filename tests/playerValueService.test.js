@@ -3,6 +3,7 @@ const assert = require('node:assert/strict');
 
 const {
   calculatePlayerValue,
+  calculateReleaseClause,
   getAgeMultiplier,
   getRoleMultiplier,
   getOverallBaseValue
@@ -45,4 +46,10 @@ test('calculatePlayerValue applica formula base*eta*ruolo', () => {
   assert.equal(value, Math.round(140 * 1.15 * 1.2));
 });
 
-
+test('calculateReleaseClause applica aumento fisso del 25%', () => {
+  assert.equal(calculateReleaseClause(20), 25);
+  assert.equal(calculateReleaseClause(21), 26);
+  assert.equal(calculateReleaseClause(50), 63);
+  assert.equal(calculateReleaseClause(100), 125);
+  assert.equal(calculateReleaseClause(101), 126);
+});

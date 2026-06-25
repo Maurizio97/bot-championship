@@ -21,6 +21,7 @@ module.exports = {
       { name: 'Ruolo', value: info.player.role, inline: true },
       { name: 'Overall', value: String(info.player.overall), inline: true },
       { name: 'Prezzo', value: String(info.player.price), inline: true },
+      { name: 'Clausola', value: String(info.releaseClause), inline: true },
       { name: 'Disponibilita', value: info.isAvailable ? 'Disponibile' : 'Assegnato', inline: true },
       { name: 'Proprietario', value: info.ownerTeam?.name || 'Svincolato', inline: true }
     ]);
@@ -28,4 +29,3 @@ module.exports = {
     await message.reply({ embeds: [embed] });
   }
 };
-
