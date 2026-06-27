@@ -2,7 +2,7 @@ const playerRepository = require('../repositories/playerRepository');
 const { successEmbed } = require('../utils/embedFactory');
 const { ActionRowBuilder, ButtonBuilder, ButtonStyle, ComponentType } = require('discord.js');
 
-const PAGINATION_TIMEOUT_MS = 120000;
+const PAGINATION_TIMEOUT_MS = 15 * 60 * 1000;
 
 function parseCommandArgs(args) {
   const flags = {};
@@ -118,6 +118,10 @@ module.exports = {
     });
 
     collector.on('collect', async (interaction) => {
+      if (typeof collector.resetTimer === 'function') {
+        collector.resetTimer();
+      }
+
       const targetPage = interaction.customId === 'free_players_prev'
         ? Math.max(1, currentPage - 1)
         : Math.min(Math.max(1, result.pages || 1), currentPage + 1);
@@ -141,4 +145,3 @@ module.exports = {
     });
   }
 };
-
