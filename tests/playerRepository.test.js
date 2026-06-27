@@ -51,6 +51,11 @@ test('findFreePlayers applica filtro role case-insensitive con prefisso', async 
     assert.equal(options.offset, 0);
     assert.equal(options.where.team_id, null);
     assert.ok(options.where, 'La query deve includere where');
+    assert.deepEqual(options.order, [
+      ['overall', 'DESC'],
+      ['player_name', 'ASC'],
+      ['id', 'ASC']
+    ]);
     return { count: 0, rows: [] };
   };
 
@@ -68,6 +73,11 @@ test('findTakenPlayers applica filtro role case-insensitive con prefisso', async
     assert.equal(options.limit, 10);
     assert.equal(options.offset, 20);
     assert.ok(options.where.team_id, 'La query deve filtrare solo giocatori assegnati');
+    assert.deepEqual(options.order, [
+      ['overall', 'DESC'],
+      ['player_name', 'ASC'],
+      ['id', 'ASC']
+    ]);
     return { count: 0, rows: [] };
   };
 
@@ -77,4 +87,3 @@ test('findTakenPlayers applica filtro role case-insensitive con prefisso', async
     Player.findAndCountAll = originalFindAndCountAll;
   }
 });
-

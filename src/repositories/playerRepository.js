@@ -44,7 +44,8 @@ function buildPlayerListQuery() {
     ],
     order: [
       ['player_name', 'ASC'],
-      ['overall', 'DESC']
+      ['overall', 'DESC'],
+      ['id', 'ASC']
     ]
   };
 }
@@ -97,7 +98,11 @@ async function findFreePlayers(options = {}) {
         required: false
       }
     ],
-    order: [['overall', 'DESC']],
+    order: [
+      ['overall', 'DESC'],
+      ['player_name', 'ASC'],
+      ['id', 'ASC']
+    ],
     limit,
     offset
   });
@@ -133,7 +138,11 @@ async function findTakenPlayers(options = {}) {
         required: false
       }
     ],
-    order: [['overall', 'DESC']],
+    order: [
+      ['overall', 'DESC'],
+      ['player_name', 'ASC'],
+      ['id', 'ASC']
+    ],
     limit,
     offset
   });
