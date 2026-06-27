@@ -106,16 +106,31 @@ function buildOwnerCandidates(rawIdentifier) {
   return noAtPrefix ? [normalized, noAtPrefix] : [normalized];
 }
 
+async function findTeamByIdentifier(teamIdentifier, options = {}) {
+  const normalized = String(teamIdentifier || '').trim();
+  if (!normalized) {
+    return null;
+  }
+
+  return teamRepository.findByNameOrOwnerCandidates(normalized, buildOwnerCandidates(normalized), options);
+}
+
+async function getTeamByIdentifier(teamIdentifier, options = {}) {
+  const team = await findTeamByIdentifier(teamIdentifier, options);
+  if (!team) {
+    throw new NotFoundError(`Squadra ${teamIdentifier} non trovata.`);
+  }
+
+  return team;
+}
+
 async function getRosterByTeamName(teamName) {
   const normalized = String(teamName || '').trim();
   if (!normalized) {
     throw new BadRequestError('Nome squadra o tag proprietario obbligatorio.');
   }
 
-  const teamByIdentifier = await teamRepository.findByNameOrOwnerCandidates(normalized, buildOwnerCandidates(normalized));
-  if (!teamByIdentifier) {
-    throw new NotFoundError(`Squadra ${teamName} non trovata.`);
-  }
+  const teamByIdentifier = await getTeamByIdentifier(normalized);
 
   const all = await teamRepository.findAllWithPlayers();
   const team = all.find((item) => item.id === teamByIdentifier.id);
@@ -135,5 +150,7 @@ module.exports = {
   listTeams,
   listTeamRosters,
   getTeamByOwnerCandidates,
+  findTeamByIdentifier,
+  getTeamByIdentifier,
   getRosterByTeamName
 };

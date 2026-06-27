@@ -47,8 +47,8 @@ test('il comando teams resta riservato allo staff', () => {
   assert.equal(teams.adminOnly, true);
 });
 
-test('il comando acquista resta riservato allo staff', () => {
-  assert.equal(acquista.adminOnly, true);
+test('il comando acquista e accessibile agli utenti normali', () => {
+  assert.equal(acquista.adminOnly, false);
 });
 
 test('il comando svincola resta riservato allo staff', () => {

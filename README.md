@@ -118,6 +118,7 @@ Fatto. Comandi `adminOnly: true` sono bloccati per utenti senza ruolo.
 - `!valore <giocatore>` — Valore giocatore
 - `!comandi` — Elenco comandi
 - `!scegli <giocatore>` — Candidatura giocatore (team selection)
+- `!acquista <giocatore> <prezzo> <squadraVenditrice|@owner> <squadraAcquirente|@owner>` — Trasferimento durante mercato aperto
 - `!teams` — Elenco squadre (admin)
 - `!continueteams`, `!closeteams` — Team selection lifecycle
 
@@ -126,8 +127,7 @@ Fatto. Comandi `adminOnly: true` sono bloccati per utenti senza ruolo.
 - `!addteam <nome> <@owner>` — Crea squadra
 - `!updateteam <teamId> <nome> <@owner>` — Modifica squadra
 - `!deleteteam <teamId>` — Elimina squadra
-- `!assignplayer <giocatore> <teamId>` — Assegna giocatore
-- `!acquista <giocatore> <@owner>` — Acquista svincolato fuori draft (con controlli budget)
+- `!assegnagiocatore <giocatore> <squadra|@owner> <prezzo>` — Assegna svincolato via asta
 - `!svincola <giocatore>` — Rimuove giocatore dalla squadra e rimborsa il costo
 - `!iniziodraft`, `!pausadraft`, `!continua`, `!chiudidraft` — Draft control
 - `!scegli`, `!assegna` — Draft + team selection actions
@@ -136,7 +136,7 @@ Fatto. Comandi `adminOnly: true` sono bloccati per utenti senza ruolo.
 - `!aprimercato`, `!chiudimercato` — Market control
 - `!comandistaff` — Elenco comandi staff
 
-`&assignplayer` cerca il giocatore per nome; se trova più risultati, suggerisce i primi 10 match con relativo ID.
+`&assegnagiocatore` cerca il giocatore per nome o ID; squadra per nome o owner (`@owner`/mention). Alias legacy: `&assignplayer`.
 
 ## Schema database
 
@@ -166,4 +166,3 @@ Restart bot NON resetta progress. Usa `!iniziodraft` per reset consapevole.
 - Nuovi comandi: `src/commands/` + registrare in `src/commands/index.js`
 - Business logic: `src/services/`
 - DB access: `src/repositories/`
-

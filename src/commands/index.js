@@ -1,7 +1,7 @@
 const env = require('../config/env');
 const acquista = require('./acquista');
 const addteam = require('./addteam');
-const assignplayer = require('./assignplayer');
+const assegnagiocatore = require('./assegnagiocatore');
 const aggiungi = require('./aggiungi');
 const budget = require('./budget');
 const chi = require('./chi');
@@ -49,7 +49,7 @@ function normalizeUsage(usage) {
 for (const command of [
   acquista,
   addteam,
-  assignplayer,
+  assegnagiocatore,
   aggiungi,
   budget,
   chi,
